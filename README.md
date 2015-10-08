@@ -14,10 +14,8 @@ Install VirtualBox and Vagrant
 3. `vagrant up` (takes some time)
 4. `vagrant ssh` (should ssh you into your VM)
 5. `cd /var/www`
-6. `pip install -r requirements.txt`
-7. `source venv/bin/activate` - Puts you into a Python 3.4 virtual environment
-	- To leave the virtual environment: `deactivate`
-8. Edit your hosts file on your local machine to point `192.168.56.101` to `templatesandmoe.local`
+6. `sudo pip3 install -r requirements.txt`
+7. Edit your hosts file on your local machine to point `192.168.56.101` to `templatesandmoe.local`
 	- Windows: `C:/Windows/System32/drivers/hosts`
 	- OSX: `/etc/hosts`
 
@@ -27,11 +25,9 @@ Install VirtualBox and Vagrant
 1. Go to the root project folder on host machine
 2. `vagrant up` (if the vm isn't on yet)
 3. `vagrant ssh` 
-4. `cd /var/www`
-5. `source venv/bin/activate`
-6. `cd src/templatesandmoe`
-7. `python app.py`
-8. Go to templatesandmoe.local:5000 in your browser
+4. `cd /var/www/src/templatesandmoe`
+5. `python app.py`
+6. Go to templatesandmoe.local:5000 in your browser
 
 Changes can be made through the host machine and will automatically be synced to the VM. Any files changes should be detected, and the application will be restarted automatically.
 
