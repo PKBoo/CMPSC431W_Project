@@ -43,4 +43,38 @@ CREATE TABLE Transaction_Items (
 	ON UPDATE CASCADE
 	ON DELETE CASCADE
 	);
-	
+
+CREATE TABLE Transactions(
+	transaction_id int NOT NULL AUTO_INCREMENT,
+	user_id int,
+	created_at DATETIME,
+	PRIMARY KEY(transaction_id),
+	FOREIGN KEY (user_id) references Users(user_id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE Item_Tags(
+	item_tag_id int NOT NULL AUTO_INCREMENT,
+	tag_id int,
+	item_id int,
+	PRIMARY KEY(item_tag_id, item_id),
+	FOREIGN KEY (item_id) references Items(item_id)
+	ON UPDATE CASCADE
+	ON DELETE CASCADE
+);
+
+CREATE TABLE `Tags` (
+  `tag_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`tag_id`)
+);
+
+
+CREATE TABLE Services(
+	service_id int NOT NULL AUTO_INCREMENT,
+	item_id int,
+	starting_price int,
+	end_date DATETIME,
+	PRIMARY KEY(service_id)
+);
