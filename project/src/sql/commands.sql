@@ -31,3 +31,16 @@ CREATE TABLE Categories (
 	PRIMARY KEY(category_id)
 	);
 	
+CREATE TABLE Transaction_Items (
+	transaction_item_id int NOT NULL AUTO_INCREMENT,
+	transaction_id int NOT NULL,
+	item_id int NOT NULL,
+	PRIMARY KEY(transaction_item_id, transaction_id),
+	#FOREIGN KEY (transaction_id) references Transactions(transaction_id) 
+	#ON UPDATE CASCADE
+	#ON DELETE CASCADE
+	FOREIGN KEY (item_id) references Items(item_id)
+	ON UPDATE CASCADE
+	ON DELETE CASCADE
+	);
+	
