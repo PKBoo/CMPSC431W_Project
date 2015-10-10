@@ -13,8 +13,9 @@ Install VirtualBox and Vagrant
 2. `cd CMPSC431W_Project`
 3. `vagrant up` (takes some time)
 4. `vagrant ssh` (should ssh you into your VM)
-5. `sudo pip3 install -r requirements.txt`
-6. Edit your hosts file on your local machine to point `192.168.56.101` to `templatesandmoe.local`
+5. `sudo apt-get install python3-pip`
+6. `sudo pip3 install -r requirements.txt`
+7. Edit your hosts file on your local machine to point `192.168.56.101` to `templatesandmoe.local`
 	- Windows: `C:/Windows/System32/drivers/hosts`
 	- OSX: `/etc/hosts`
 
