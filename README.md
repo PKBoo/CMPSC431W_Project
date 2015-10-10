@@ -14,8 +14,9 @@ Install VirtualBox and Vagrant
 3. `vagrant up` (takes some time)
 4. `vagrant ssh` (should ssh you into your VM)
 5. `sudo apt-get install python3-pip`
-6. `sudo pip3 install -r requirements.txt`
-7. Edit your hosts file on your local machine to point `192.168.56.101` to `templatesandmoe.local`
+6. `cd /var/www`
+7. `sudo pip3 install -r requirements.txt`
+8. Edit your hosts file on your local machine to point `192.168.56.101` to `templatesandmoe.local`
 	- Windows: `C:/Windows/System32/drivers/hosts`
 	- OSX: `/etc/hosts`
 
@@ -36,4 +37,10 @@ Changes can be made through the host machine and will automatically be synced to
 1. SSH into the VM
 2. `mysql -u templatesandmoe -p`
 3. Enter `123456` as the password
+4. `cd /var/www/src/sql`
+5. `mysql -u root -p templatesandmoe < database1_2015-10-10.sql`
+6. `mysql -u root -p templatesandmoe < testdata.sql`
 
+### Useful commands
+##### Import SQL file
+` mysql -u root -p templatesandmoe < [sqlfile]` 
