@@ -31,4 +31,9 @@ Install VirtualBox and Vagrant
 
 Changes can be made through the host machine and will automatically be synced to the VM. Any files changes should be detected, and the application will be restarted automatically.
 
+### Database Access
+---
+1. SSH into the VM
+2. `mysql -u templatesandmoe -p`
+3. Enter `123456` as the password
 
