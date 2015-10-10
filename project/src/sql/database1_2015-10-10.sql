@@ -196,7 +196,7 @@ CREATE TABLE `Users` (
   `first_name` varchar(40) DEFAULT NULL,
   `last_name` varchar(40) DEFAULT NULL,
   `email` varchar(40) DEFAULT NULL,
-  'permissions' int(11) DEFAULT NULL,
+  `permissions` int(11) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
