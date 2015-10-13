@@ -80,6 +80,7 @@ CREATE TABLE `Items` (
   `user_id` int(11) DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
+  `price` double NOT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -200,7 +201,7 @@ CREATE TABLE `Users` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
+ALTER TABLE Items ADD CONSTRAINT fk_ItemsUsers FOREIGN KEY (user_id) REFERENCES Users(user_id);
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
