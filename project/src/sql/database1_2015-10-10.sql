@@ -204,6 +204,8 @@ CREATE TABLE `Users` (
 ALTER TABLE Items ADD CONSTRAINT fk_ItemsUsers FOREIGN KEY (user_id) REFERENCES Users(user_id);
 ALTER TABLE Item_Tags ADD CONSTRAINT fk_ItemTags_Tags FOREIGN KEY (tag_id) REFERENCES Tags(tag_id)
   ON DELETE CASCADE;
+ALTER TABLE Categories ADD CONSTRAINT fk_parent_category FOREIGN KEY (parent_id) REFERENCES Categories(category_id)
+  ON DELETE CASCADE;
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
