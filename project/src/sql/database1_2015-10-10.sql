@@ -27,14 +27,14 @@ DROP TABLE IF EXISTS `Bids`;
 
 CREATE TABLE `Bids` (
   `bid_id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_id` int(11) DEFAULT NULL,
+  `service_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `amount` double NOT NULL,
   PRIMARY KEY (`bid_id`),
   KEY `fk_user_id` (`user_id`),
-  KEY `fk_item_id` (`item_id`),
-  CONSTRAINT `fk_item_id` FOREIGN KEY (`item_id`) REFERENCES `Services` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `fk_item_id` (`service_id`),
+  CONSTRAINT `fk_service_id` FOREIGN KEY (`service_id`) REFERENCES `Services` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
