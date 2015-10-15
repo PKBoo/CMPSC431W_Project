@@ -31,9 +31,7 @@ CREATE TABLE `Bids` (
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `amount` double NOT NULL,
-  PRIMARY KEY (`bid_id`),
-  KEY `fk_user_id` (`user_id`),
-  KEY `fk_item_id` (`service_id`),
+  PRIMARY KEY (`bid_id`, `user_id`, `service_id`),
   CONSTRAINT `fk_service_id` FOREIGN KEY (`service_id`) REFERENCES `Services` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -49,7 +47,7 @@ CREATE TABLE `Categories` (
   `category_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(40) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`category_id`)
+  PRIMARY KEY (`category_id`, `parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -63,7 +61,7 @@ CREATE TABLE `Item_Tags` (
   `item_tag_id` int(11) NOT NULL AUTO_INCREMENT,
   `tag_id` int(11) DEFAULT NULL,
   `item_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`item_tag_id`,`item_id`),
+  PRIMARY KEY (`item_tag_id`,`item_id`, `tag_id`),
   KEY `item_id` (`item_id`),
   CONSTRAINT `item_tags_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `Items` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -82,7 +80,7 @@ CREATE TABLE `Items` (
   `name` varchar(100) DEFAULT NULL,
   `price` double NOT NULL,
   `created_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`item_id`)
+  PRIMARY KEY (`item_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -98,7 +96,7 @@ CREATE TABLE `Ratings` (
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `amount` double NOT NULL,
-  PRIMARY KEY (`rating_id`),
+  PRIMARY KEY (`rating_id`, `template_id`, `user_id`),
   KEY `fk_template` (`template_id`),
   KEY `fk_users` (`user_id`),
   CONSTRAINT `fk_template` FOREIGN KEY (`template_id`) REFERENCES `Templates` (`template_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -116,7 +114,7 @@ CREATE TABLE `Services` (
   `service_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`service_id`),
+  PRIMARY KEY (`service_id`, `item_id`),
   KEY `fk_item` (`item_id`),
   CONSTRAINT `fk_item` FOREIGN KEY (`item_id`) REFERENCES `Items` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -145,7 +143,7 @@ CREATE TABLE `Templates` (
   `template_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) DEFAULT NULL,
   `file_path` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`template_id`),
+  PRIMARY KEY (`template_id`, `item_id`),
   KEY `fk_items` (`item_id`),
   CONSTRAINT `fk_items` FOREIGN KEY (`item_id`) REFERENCES `Items` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -161,7 +159,7 @@ CREATE TABLE `Transaction_Items` (
   `transaction_item_id` int(11) NOT NULL AUTO_INCREMENT,
   `transaction_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  PRIMARY KEY (`transaction_item_id`,`transaction_id`),
+  PRIMARY KEY (`transaction_item_id`,`transaction_id`, `item_id`),
   KEY `fk_users_transaction_items` (`item_id`),
   CONSTRAINT `fk_users_transaction_items` FOREIGN KEY (`item_id`) REFERENCES `Items` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -177,7 +175,7 @@ CREATE TABLE `Transactions` (
   `transaction_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`transaction_id`),
+  PRIMARY KEY (`transaction_id`, `user_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -200,7 +198,8 @@ CREATE TABLE `Users` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE Items ADD CONSTRAINT fk_ItemsUsers FOREIGN KEY (user_id) REFERENCES Users(user_id);
+ALTER TABLE Items ADD CONSTRAINT fk_ItemsUsers FOREIGN KEY (user_id) REFERENCES Users(user_id)
+  ON DELETE CASCADE;
 ALTER TABLE Item_Tags ADD CONSTRAINT fk_ItemTags_Tags FOREIGN KEY (tag_id) REFERENCES Tags(tag_id)
   ON DELETE CASCADE;
 ALTER TABLE Categories ADD CONSTRAINT fk_parent_category FOREIGN KEY (parent_id) REFERENCES Categories(category_id)
