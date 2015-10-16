@@ -1,19 +1,14 @@
-# -*- mode: ruby -*-
+Vagrant.configure("2") do |config|
 
-dir = File.dirname(File.expand_path(__FILE__))
 
-require 'yaml'
-require "#{dir}/puphpet/ruby/deep_merge.rb"
+    config.vm.box = "ubuntu/trusty64"
+    config.vm.network :forwarded_port, guest: 5000, host: 5000, auto_correct: true
+    config.vm.synced_folder "./project", "/var/www", create: true, group: "www-data", owner: "www-data"
 
-configValues = YAML.load_file("#{dir}/puphpet/config.yaml")
+    config.vm.provider "virtualbox" do |v|
+        v.name = "templatesandmoedev"
+        v.customize ["modifyvm", :id, "--memory", "512"]
+    end
 
-if File.file?("#{dir}/puphpet/config-custom.yaml")
-  custom = YAML.load_file("#{dir}/puphpet/config-custom.yaml")
-  configValues.deep_merge!(custom)
+    config.vm.provision "shell", path: "provision/setup.sh"
 end
-
-data = configValues['vagrantfile']
-
-Vagrant.require_version '>= 1.6.0'
-
-eval File.read("#{dir}/puphpet/vagrant/Vagrantfile-#{data['target']}")
