@@ -202,8 +202,6 @@ ALTER TABLE Items ADD CONSTRAINT fk_ItemsUsers FOREIGN KEY (user_id) REFERENCES 
   ON DELETE CASCADE;
 ALTER TABLE Item_Tags ADD CONSTRAINT fk_ItemTags_Tags FOREIGN KEY (tag_id) REFERENCES Tags(tag_id)
   ON DELETE CASCADE;
-ALTER TABLE Categories ADD CONSTRAINT fk_parent_category FOREIGN KEY (parent_id) REFERENCES Categories(category_id)
-  ON DELETE CASCADE;
 ALTER TABLE Transaction_Items ADD CONSTRAINT fk_transaction_items_transaction FOREIGN KEY (transaction_id) REFERENCES Transactions(transaction_id)
   ON DELETE CASCADE;
 
