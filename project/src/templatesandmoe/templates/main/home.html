@@ -3,6 +3,13 @@
 {% block body %}
 
     <div class="container">
+        {% if session.user_id %}
+            <div class="row">
+                <div class="col-md-12">
+                    Welcome <strong>{{ session.username }}</strong>.
+                </div>
+            </div>
+        {% endif %}
         <h1>Bootstrap test</h1>
     </div>
 
