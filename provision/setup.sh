@@ -7,6 +7,7 @@ apt-get -qq update
 
 apt-get install vim git python3-pip -y > /dev/null 2>&1
 apt-get install debconf-utils -y > /dev/null
+apt-get install libffi-dev -y > /dev/null
 
 debconf-set-selections <<< "mysql-server mysql-server/root_password password 123456"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password 123456"
