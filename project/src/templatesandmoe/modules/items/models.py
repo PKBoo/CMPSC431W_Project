@@ -5,7 +5,7 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DECIMAL, Date
 
 Base = declarative_base()
 
-class Item (Base): 
+class Item(Base):
     __tablename__='Items'
 
     item_id = Column(Integer, primary_key=True)
@@ -15,8 +15,10 @@ class Item (Base):
     price = Column(DECIMAL)
     created_at = Column(DateTime)
 
-    def get_all ():
-         user = db.engine.execute(
-         'SELECT * FROM Items').fetchall()
-         print (user)
-         return user
+    @classmethod
+    def get_all(cls):
+        user = db.engine.execute(
+            'SELECT * FROM Items'
+        ).fetchall()
+
+        return user

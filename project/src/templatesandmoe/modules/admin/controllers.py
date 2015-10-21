@@ -14,5 +14,4 @@ def home():
 @adminModule.route('/items', methods=['GET'])
 def items():
     items = Item.get_all()
-    print (items)
     return render_template("admin/items.html", items = items)
