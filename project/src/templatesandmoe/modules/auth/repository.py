@@ -17,11 +17,10 @@ class AuthRepository:
 
         # First check if the username exists. If it does, check if the password is correct
         user = db.engine.execute(text(
-            'SELECT * FROM Users WHERE username = :username LIMIT 1'
-        ), username=username).fetchall()
+            'SELECT * FROM Users WHERE username = :username'
+        ), username=username).fetchone()
 
         if len(user) > 0:
-            user = user[0]
             submitted_password = password.encode('utf-8')
             user_password = user.password.encode('utf-8')
 
