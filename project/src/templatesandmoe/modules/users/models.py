@@ -9,12 +9,12 @@ Base = declarative_base()
 #     print(row)
 
 class User(Base):
-    __tablename__ = 'Users'
+	__tablename__ = 'Users'
 
-    user_id = Column(Integer, primary_key=True)
-    username = Column(String)
-    password = Column(String)
-    first_name = Column(String)
-    last_name = Column(String)
-    email = Column(String)
-    permissions = Column(Integer)
+	user_id = Column(Integer, primary_key=True)
+	username = Column(String)
+	password = Column(String)
+	first_name = Column(String)
+	last_name = Column(String)
+	email = Column(String)
+	permissions = Column(Integer)
