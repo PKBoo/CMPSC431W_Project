@@ -6,7 +6,7 @@
         {% if session.user_id %}
             <div class="row">
                 <div class="col-md-12">
-                    Welcome <strong>{{ session.username }}</strong>.
+                    Welcome <strong>{{ session.username }}</strong>. {% if session.permission > 0 %} <a href="/admin">Admin Dashboard</a> {% endif %}
                 </div>
             </div>
         {% endif %}
