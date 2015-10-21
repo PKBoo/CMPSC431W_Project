@@ -6,10 +6,6 @@ from templatesandmoe import db
 
 Base = declarative_base()
 
-# example query:
-# users = db.engine.execute('SELECT * FROM Users')
-# for row in users:
-#     print(row)
 
 class User(Base):
     __tablename__ = 'Users'
@@ -21,6 +17,9 @@ class User(Base):
     last_name = Column(String)
     email = Column(String)
     permissions = Column(Integer)
+
+    def full_name(self):
+        return self.first_name + ' ' + self.last_name
 
     @classmethod
     def authenticate(cls, username, password):
