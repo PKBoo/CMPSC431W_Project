@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, session
-
+from templatesandmoe.modules.items.models import Item
 adminModule = Blueprint('admin', __name__, url_prefix='/admin')
 
 
@@ -10,3 +10,9 @@ def home():
         return render_template("admin/home.html")
     else:
         return redirect("/")
+
+@adminModule.route('/items', methods=['GET'])
+def items():
+	items = Item.get_all()
+	print (items)
+	return render_template("admin/items.html", items = items)
