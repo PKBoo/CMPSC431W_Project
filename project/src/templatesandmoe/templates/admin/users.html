@@ -16,6 +16,7 @@
                     <th>Username</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +26,9 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.full_name }}</td>
                         <td>{{ user.email }}</td>
+                        <td>
+                            <a href="/admin/users/{{ user.user_id }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                        </td>
                     </tr>
                 {% endfor %}
 

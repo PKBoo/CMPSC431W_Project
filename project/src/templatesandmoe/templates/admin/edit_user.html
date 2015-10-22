@@ -3,7 +3,7 @@
 {% block body %}
 
     <div class="container">
-        <h1>Add User</h1>
+        <h1>Edit User - {{ user.username }}</h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -60,7 +60,7 @@
                         {{ form.permissions(id_='permission', class_='form-control') }}
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Add User</button>
+                    <button type="submit" class="btn btn-primary">Update User</button>
                 </form>
             </div>
         </div>

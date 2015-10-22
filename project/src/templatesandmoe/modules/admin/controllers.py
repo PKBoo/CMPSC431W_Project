@@ -2,7 +2,7 @@ import bcrypt
 from flask import Blueprint, flash, render_template, redirect, session
 from templatesandmoe.modules.items.models import Item
 from templatesandmoe.modules.users.models import User
-from templatesandmoe.modules.admin.forms.add_user import AddUserForm
+from templatesandmoe.modules.admin.forms.user import UserForm
 
 adminModule = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -27,9 +27,17 @@ def users():
     return render_template('admin/users.html', users=_users)
 
 
+@adminModule.route('/users/<int:user_id>')
+def edit_user(user_id):
+    user = User.get_by_id(user_id)
+    form = UserForm(obj=user)
+
+    return render_template('admin/edit_user.html', user=user, form=form)
+
+
 @adminModule.route('/users/add', methods=['GET', 'POST'])
 def add_user():
-    add_user_form = AddUserForm()
+    add_user_form = UserForm()
     if add_user_form.validate_on_submit():
         password = add_user_form.password.data.encode('utf-8')
         hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
@@ -38,7 +46,8 @@ def add_user():
                         first_name=add_user_form.first_name.data,
                         last_name=add_user_form.last_name.data,
                         email=add_user_form.email.data,
-                        permissions=add_user_form.permission.data)
+                        permissions=add_user_form.permissions.data)
+
         new_user.create()
         flash(u'Successfully added user.', 'success')
 

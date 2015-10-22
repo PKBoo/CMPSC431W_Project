@@ -1,7 +1,6 @@
 import bcrypt
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from templatesandmoe import db, db_session
 
@@ -22,6 +21,10 @@ class User(Base):
     @property
     def full_name(self):
         return self.first_name + ' ' + self.last_name
+
+    @classmethod
+    def get_by_id(cls, user_id):
+        return db_session.query(User).filter(User.user_id == user_id).first()
 
     @classmethod
     def get_all(cls):
