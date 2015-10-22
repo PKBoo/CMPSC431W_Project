@@ -1,0 +1,30 @@
+{% extends "layout/admin.html" %}
+{% block title %}- Users{% endblock %}
+{% block body %}
+
+    <div class="container">
+        <h1>Users</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.full_name }}</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

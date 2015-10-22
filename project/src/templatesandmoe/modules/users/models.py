@@ -1,8 +1,9 @@
 import bcrypt
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
-from templatesandmoe import db
+from templatesandmoe import db, db_session
 
 Base = declarative_base()
 
@@ -18,8 +19,13 @@ class User(Base):
     email = Column(String)
     permissions = Column(Integer)
 
+    @hybrid_property
     def full_name(self):
         return self.first_name + ' ' + self.last_name
+
+    @classmethod
+    def get_all(cls):
+        return db_session.query(User).all()
 
     @classmethod
     def authenticate(cls, username, password):
