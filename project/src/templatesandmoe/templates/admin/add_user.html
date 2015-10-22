@@ -1,0 +1,69 @@
+{% extends "layout/admin.html" %}
+{% block title %}- Users{% endblock %}
+{% block body %}
+
+    <div class="container">
+        <h1>Add User</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'alert' %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% elif category == 'success' %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% for field, errors in form.errors.items() %}
+            <div class="alert alert-danger">
+                {{ errors[0] }}
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <form action="" method="post">
+                    {{ form.csrf_token }}
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        {{ form.username(id_='username', class_='form-control') }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        {{ form.password(id_='password', class_='form-control') }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first">First Name</label>
+                        {{ form.first_name(id_='first', class_='form-control') }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last">Last Name</label>
+                        {{ form.last_name(id_='last', class_='form-control') }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        {{ form.email(id_='email', class_='form-control') }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="permission">Permission</label>
+                        {{ form.permission(id_='permission', class_='form-control') }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

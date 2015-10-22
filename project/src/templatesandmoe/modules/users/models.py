@@ -19,7 +19,7 @@ class User(Base):
     email = Column(String)
     permissions = Column(Integer)
 
-    @hybrid_property
+    @property
     def full_name(self):
         return self.first_name + ' ' + self.last_name
 
@@ -53,3 +53,9 @@ class User(Base):
                 return False
         else:
             return False
+
+    def create(self):
+        db_session.add(self)
+        db_session.commit()
+
+        return self
