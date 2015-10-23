@@ -39,17 +39,20 @@ def edit_user(user_id):
 def add_user():
     add_user_form = UserForm()
     if add_user_form.validate_on_submit():
-        password = add_user_form.password.data.encode('utf-8')
-        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
-        new_user = User(username=add_user_form.username.data,
-                        password=hashed_password,
-                        first_name=add_user_form.first_name.data,
-                        last_name=add_user_form.last_name.data,
-                        email=add_user_form.email.data,
-                        permissions=add_user_form.permissions.data)
+        if User.username_exists(add_user_form.username.data):
+            flash(u'Username already exists.', 'error')
+        else:
+            password = add_user_form.password.data.encode('utf-8')
+            hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+            new_user = User(username=add_user_form.username.data,
+                            password=hashed_password,
+                            first_name=add_user_form.first_name.data,
+                            last_name=add_user_form.last_name.data,
+                            email=add_user_form.email.data,
+                            permissions=add_user_form.permissions.data)
 
-        new_user.create()
-        flash(u'Successfully added user.', 'success')
+            new_user.create()
+            flash(u'Successfully added user.', 'success')
 
         return redirect('admin/users/add')
     else:

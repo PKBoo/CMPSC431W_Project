@@ -27,6 +27,14 @@ class User(Base):
         return db_session.query(User).filter(User.user_id == user_id).first()
 
     @classmethod
+    def username_exists(cls, username):
+        user = db_session.query(User).filter(User.username == username).first()
+        if user is None:
+            return False
+        else:
+            return True
+
+    @classmethod
     def get_all(cls):
         return db_session.query(User).all()
 
