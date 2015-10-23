@@ -21,7 +21,7 @@ class Item(Base):
             """SELECT I.item_id, I.user_id, I.category_id,
             I.name, I.price, I.created_at, 
             C.name AS category_name, U.username AS username
-            FROM Items I INNER JOIN Categories C ON I.category_id=C.category_id
+            FROM Items I LEFT JOIN Categories C ON I.category_id=C.category_id
             INNER JOIN Users U on I.user_id=U.user_id"""
         ).fetchall()
 
