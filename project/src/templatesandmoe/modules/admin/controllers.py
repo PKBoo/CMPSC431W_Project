@@ -1,11 +1,13 @@
 import bcrypt
 from flask import Blueprint, flash, render_template, redirect, session
+from templatesandmoe import db_session
 from templatesandmoe.modules.items.models import Item
 from templatesandmoe.modules.users.models import User
+from templatesandmoe.modules.users.service import UserService
 from templatesandmoe.modules.admin.forms.user import UserForm
 
 adminModule = Blueprint('admin', __name__, url_prefix='/admin')
-
+user_service = UserService(database=db_session)
 
 @adminModule.before_request
 def before_request():
@@ -23,23 +25,29 @@ def home():
 
 @adminModule.route('/users', methods=['GET'])
 def users():
-    _users = User.get_all()
+    _users = user_service.get_all()
     return render_template('admin/users.html', users=_users)
 
 
-@adminModule.route('/users/<int:user_id>')
+@adminModule.route('/users/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
-    user = User.get_by_id(user_id)
-    form = UserForm(obj=user)
+    user = user_service.get_by_id(user_id)
+    if user is not None:
+        form = UserForm(obj=user)
+        #if form.validate_on_submit():
 
-    return render_template('admin/edit_user.html', user=user, form=form)
+        # else:
+        #
+        return render_template('admin/edit_user.html', user=user, form=form)
+    else:
+        return redirect('/')
 
 
 @adminModule.route('/users/add', methods=['GET', 'POST'])
 def add_user():
     add_user_form = UserForm()
     if add_user_form.validate_on_submit():
-        if User.username_exists(add_user_form.username.data):
+        if user_service.exists(add_user_form.username.data):
             flash(u'Username already exists.', 'error')
         else:
             password = add_user_form.password.data.encode('utf-8')
