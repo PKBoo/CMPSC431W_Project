@@ -32,13 +32,28 @@ def users():
 @adminModule.route('/users/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
     user = user_service.get_by_id(user_id)
+
+    # Make sure a user with this id actually exists
     if user is not None:
         form = UserForm(obj=user)
-        #if form.validate_on_submit():
 
-        # else:
-        #
-        return render_template('admin/edit_user.html', user=user, form=form)
+        # Check if we're submitting a form or not
+        if form.validate_on_submit():
+            # Only need to update the password if a new password was entered into the form
+            if form.password.data:
+                user.set_password(form.password.data)
+
+            user.username = form.username.data
+            user.first_name = form.first_name.data
+            user.last_name = form.last_name.data
+            user.email = form.email.data
+            user.permissions = form.permissions.data
+            user.save()
+            
+            flash(u'Successfully updated user.', 'success')
+            return redirect('admin/users/' + str(user.user_id))
+        else:
+            return render_template('admin/edit_user.html', user=user, form=form)
     else:
         return redirect('/')
 
