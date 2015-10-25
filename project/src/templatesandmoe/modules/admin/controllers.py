@@ -94,4 +94,7 @@ def add_user():
 @adminModule.route('/items', methods=['GET'])
 def items():
     _items = items_service.get_all()
-    return render_template('admin/items.html', items=_items)
+    _templates = items_service.get_all_templates()
+    _services = items_service.get_all_services()
+
+    return render_template('admin/items.html', templates=_templates, services=_services)

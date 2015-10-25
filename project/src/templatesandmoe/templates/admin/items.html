@@ -3,29 +3,63 @@
 {% block body %}
 
     <div class="container">
-        <h1>Items</h1>
-    <table class="table table-striped"> 
-    	<thead>
-    		<tr>
-    			<th>Item ID</th>
-    			<th>Item Name</th>
-                <th>Item Category</th>
-                <th>Created By</th>
-    			<th>Price</th>
-    		</tr>
-    	</thead>
-    	<tbody> 
-    {% for item in items %}
-    	<tr>
-    		<td>{{ item.item_id }}</td>
-    		<td>{{ item.name }}</td>     
-            <td>{{ item.category_name }}</td>
-            <td>{{ item.username }}</td>
-    		<td>{{ item.price }}</td>	
-    {% endfor %}
-        </tr>
-    </tbody>
-    </table>
+        <ul id="item-type-tabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#templates" aria-controls="templates" role="tab" data-toggle="tab">Templates</a></li>
+            <li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="templates">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item ID</th>
+                            <th>Item Name</th>
+                            <th>Item Category</th>
+                            <th>Created By</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for template in templates %}
+                            <tr>
+                                <td>{{ template.item_id }}</td>
+                                <td>{{ template.name }}</td>
+                                <td>{{ template.category_name }}</td>
+                                <td>{{ template.username }}</td>
+                                <td>{{ template.price }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="services">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Service ID</th>
+                            <th>Service Name</th>
+                            <th>Created By</th>
+                            <th>Start date</th>
+                            <th>End date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in services %}
+                            <tr>
+                                <td>{{ service.item_id }}</td>
+                                <td>{{ service.name }}</td>
+                                <td>{{ service.username }}</td>
+                                <td>{{ service.created_at }}</td>
+                                <td>{{ service.end_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

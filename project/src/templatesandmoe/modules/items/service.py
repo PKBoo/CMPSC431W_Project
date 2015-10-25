@@ -19,6 +19,18 @@ class ItemsService:
 
         return items
 
+    def get_all_templates(self):
+        templates = self.database.execute(
+            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
+                'C.name AS category_name, U.username '
+            'FROM Templates T '
+            'JOIN Items I ON I.item_id = T.item_id '
+            'JOIN Categories C ON I.category_id = C.category_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+        )
+
+        return templates
+
     def get_templates_by_user_id(self, user_id):
         templates = self.database.execute(text(
             'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
@@ -30,6 +42,16 @@ class ItemsService:
         ), {'user_id': user_id})
 
         return templates
+
+    def get_all_services(self):
+        services = self.database.execute(
+            'SELECT S.service_id, I.item_id, S.end_date, I.name, I.price, I.created_at, U.username '
+            'FROM Services S '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+        )
+
+        return services
 
     def get_services_by_user_id(self, user_id):
         services = self.database.execute(text(
