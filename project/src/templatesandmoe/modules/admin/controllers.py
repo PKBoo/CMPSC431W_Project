@@ -56,7 +56,13 @@ def edit_user(user_id):
             flash(u'Successfully updated user.', 'success')
             return redirect('admin/users/' + str(user.user_id))
         else:
-            return render_template('admin/edit_user.html', user=user, form=form)
+            templates = items_service.get_templates_by_user_id(user.user_id)
+            services = items_service.get_services_by_user_id(user.user_id)
+            return render_template('admin/edit_user.html',
+                                   user=user,
+                                   form=form,
+                                   templates=templates,
+                                   services=services)
     else:
         return redirect('/')
 

@@ -27,7 +27,7 @@
         {% endfor %}
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <form action="" method="post">
                     {{ form.csrf_token }}
                     <div class="form-group">
@@ -64,8 +64,50 @@
                 </form>
             </div>
 
-            <div class="col-md-6">
-                <strong>Items</strong>
+            <div class="col-md-8">
+                <strong>Templates</strong>
+                <table class="table table-striped">
+                    <thead>
+                        <th>Template ID</th>
+                        <th>Item ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                    </thead>
+                    <tbody>
+                        {% for template in templates %}
+                            <tr>
+                                <td>{{ template.template_id }}</td>
+                                <td>{{ template.item_id }}</td>
+                                <td>{{ template.name }}</td>
+                                <td>{{ template.category_name }}</td>
+                                <td>{{ template.price }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <strong>Services</strong>
+                <table class="table table-striped">
+                    <thead>
+                        <th>Service ID</th>
+                        <th>Item ID</th>
+                        <th>Name</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                    </thead>
+                    <tbody>
+                        {% for service in services %}
+                            <tr>
+                                <td>{{ service.service_id }}</td>
+                                <td>{{ service.item_id }}</td>
+                                <td>{{ service.name }}</td>
+                                <td>{{ service.created_at }}</td>
+                                <td>{{ service.end_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
 
         </div>
