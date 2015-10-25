@@ -1,10 +1,10 @@
 import bcrypt
 from sqlalchemy.sql import text
+from sqlalchemy.exc import SQLAlchemyError
 from templatesandmoe.modules.users.models import User
 
 
-class UserService:
-
+class UsersService:
     def __init__(self, database):
         self.database = database
 
@@ -24,7 +24,10 @@ class UserService:
 
     def delete(self, user):
         self.database.delete(user)
-        self.database.commit()
+        try:
+            self.database.commit()
+        except SQLAlchemyError:
+            print("SQLAlchemy exception when deleting.")
 
     def authenticate(self, username, password):
         """ Checks if a username and password is valid
@@ -39,7 +42,7 @@ class UserService:
         # First check if the username exists. If it does, check if the password is correct
         user = self.database.execute(text(
             'SELECT * FROM Users WHERE username = :username'
-        ),{
+        ), {
             'username': username
         }).fetchone()
 

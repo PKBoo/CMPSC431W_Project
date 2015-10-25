@@ -3,11 +3,14 @@ from flask import Blueprint, flash, render_template, redirect, session
 from templatesandmoe import db_session
 from templatesandmoe.modules.items.models import Item
 from templatesandmoe.modules.users.models import User
-from templatesandmoe.modules.users.service import UserService
+from templatesandmoe.modules.users.service import UsersService
+from templatesandmoe.modules.items.service import ItemsService
 from templatesandmoe.modules.admin.forms.user import UserForm
 
 adminModule = Blueprint('admin', __name__, url_prefix='/admin')
-user_service = UserService(database=db_session)
+users_service = UsersService(database=db_session)
+items_service = ItemsService(database=db_session)
+
 
 @adminModule.before_request
 def before_request():
@@ -25,13 +28,13 @@ def home():
 
 @adminModule.route('/users', methods=['GET'])
 def users():
-    _users = user_service.get_all()
+    _users = users_service.get_all()
     return render_template('admin/users.html', users=_users)
 
 
 @adminModule.route('/users/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
-    user = user_service.get_by_id(user_id)
+    user = users_service.get_by_id(user_id)
 
     # Make sure a user with this id actually exists
     if user is not None:
@@ -62,7 +65,7 @@ def edit_user(user_id):
 def add_user():
     add_user_form = UserForm()
     if add_user_form.validate_on_submit():
-        if user_service.exists(add_user_form.username.data):
+        if users_service.exists(add_user_form.username.data):
             flash(u'Username already exists.', 'error')
         else:
             password = add_user_form.password.data.encode('utf-8')
@@ -84,5 +87,5 @@ def add_user():
 
 @adminModule.route('/items', methods=['GET'])
 def items():
-    _items = Item.get_all()
-    return render_template('admin/items.html', items = _items)
+    _items = items_service.get_all()
+    return render_template('admin/items.html', items=_items)
