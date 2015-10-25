@@ -22,6 +22,10 @@ class UserService:
         else:
             return True
 
+    def delete(self, user):
+        self.database.delete(user)
+        self.database.commit()
+
     def authenticate(self, username, password):
         """ Checks if a username and password is valid
 

@@ -21,8 +21,10 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 from templatesandmoe.modules.main.controllers import mainModule as mainModule
 from templatesandmoe.modules.auth.controllers import authModule as authModule
 from templatesandmoe.modules.admin.controllers import adminModule as adminModule
+from templatesandmoe.modules.api.controllers import apiModule as apiModule
 
 # Register modules
 app.register_blueprint(mainModule)
 app.register_blueprint(authModule)
 app.register_blueprint(adminModule)
+app.register_blueprint(apiModule)

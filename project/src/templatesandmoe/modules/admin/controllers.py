@@ -49,7 +49,7 @@ def edit_user(user_id):
             user.email = form.email.data
             user.permissions = form.permissions.data
             user.save()
-            
+
             flash(u'Successfully updated user.', 'success')
             return redirect('admin/users/' + str(user.user_id))
         else:
