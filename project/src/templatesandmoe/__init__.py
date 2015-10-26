@@ -1,5 +1,4 @@
 from flask import Flask
-from flask import render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 
 from sqlalchemy import create_engine, MetaData
@@ -28,3 +27,8 @@ app.register_blueprint(mainModule)
 app.register_blueprint(authModule)
 app.register_blueprint(adminModule)
 app.register_blueprint(apiModule)
+
+
+@app.teardown_request
+def close_db_session(exception):
+    db_session.close()
