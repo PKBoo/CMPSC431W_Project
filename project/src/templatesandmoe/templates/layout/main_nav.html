@@ -13,13 +13,12 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/">Home</a></li>
-                <li>
-                    {% if session.username %}
-                        <a href="/logout">Log out</a>
-                    {% else %}
-                        <a href="/login">Login</a>
-                    {% endif %}
-                </li>
+                {% if session.username %}
+                    <li><a href="/logout">Log out</a></li>
+                {% else %}
+                    <li><a href="/register">Register</a></li>
+                    <li><a href="/login">Login</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

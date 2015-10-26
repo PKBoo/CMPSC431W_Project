@@ -22,6 +22,26 @@ class UsersService:
         else:
             return True
 
+    def create(self, username, password, first_name, last_name, email, permissions):
+        new_user = User(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            permissions=permissions
+        )
+        new_user.set_password(password)
+
+        self.database.add(new_user)
+        self.database.flush()
+
+        try:
+            self.database.commit()
+
+            return new_user
+        except SQLAlchemyError:
+            print('SQLAlchemy exception when creating a new user.')
+
     def delete(self, user):
         self.database.delete(user)
         try:

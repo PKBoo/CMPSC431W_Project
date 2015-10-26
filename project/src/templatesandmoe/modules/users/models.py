@@ -29,6 +29,7 @@ class User(Base):
 
     def create(self):
         db_session.add(self)
+
         db_session.commit()
 
         return self
