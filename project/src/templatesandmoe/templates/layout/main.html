@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <head>
     <title>templatesand.moe {% block title %}{% endblock %}</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 
@@ -15,7 +18,39 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </head>
 <body>
-    {% include 'layout/main_nav.html' %}
-    {% block body %}{% endblock %}
+    <div class="header">
+        <div class="container">
 
+            <div class="nav row">
+                <div class="logo col-md-3">
+                    <a href="/">templatesand.moe</a>
+                </div>
+                <div class="col-md-6 col-md-offset-3">
+                    <ul class="pull-right">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/templates">Templates</a></li>
+                        <li><a href="/services">Services</a></li>
+
+                        {% if session.username %}
+                            <li class="userlink">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ session.username }} <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#">Account</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="/logout">Log out</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li><a href="/register">Sign Up</a></li>
+                            <li><a href="/login">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
