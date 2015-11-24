@@ -62,3 +62,16 @@ class ItemsService:
         ), {'user_id': user_id})
 
         return services
+
+    def get_latest_templates(self, limit):
+        templates = self.database.execute(text(
+            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
+                'U.username, U.user_id '
+            'FROM Templates T '
+            'JOIN Items I ON I.item_id = T.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+            'ORDER BY created_at DESC '
+            'LIMIT :limit'
+        ), { 'limit': limit})
+
+        return templates
