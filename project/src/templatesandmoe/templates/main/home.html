@@ -37,7 +37,7 @@
                                     {{ session.username }} <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#">Account</a></li>
+                                        <li><a href="/account">Account</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="/logout">Log out</a></li>
                                     </ul>
@@ -72,11 +72,11 @@
             {% for template in latest_templates %}
                 <div class="col-md-3">
                     <div class="thumbnail">
-                        <a href="/items/{{ template.item_id }}">
+                        <a href="/templates/{{ template.item_id }}">
                             <img src="{{ url_for('static', filename='images/thumbnails/template_11.png') }}" />
                         </a>
                         <div class="caption">
-                            <h5><a href="/items/{{ template.item_id }}">{{ template.name }}</a></h5>
+                            <h5><a href="/templates/{{ template.item_id }}">{{ template.name }}</a></h5>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="price">${{ template.price }}</div>

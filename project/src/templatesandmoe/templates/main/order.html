@@ -28,14 +28,18 @@
                             {{ form.cvc(class='form-control') }}
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success">Place Order</button>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Place Order</button>
+                    </div>
                 </form>
             </div>
             <div class="col-md-4 col-md-offset-2">
                 <h3>Order Summary</h3>
-                <p><strong>Template:</strong> <a href="/templates/{{template.item_id}}">{{ template.name }}</a></p>
-                <p>Created by: <a href="/users/{{ template.user_id }}">{{ template.username }}</a></p>
-                <strong>Price: </strong> ${{ template.price }}
+                <div class="thumbnail">
+                    <img src="{{ url_for('static', filename='images/thumbnails/template_11.png') }}" />
+                </div>
+                <h4><a href="/templates/{{template.item_id}}">{{ template.name }}</a></h4>
+                 <span class="text-large"><strong>Total Cost: </strong> ${{ template.price }}</span>
             </div>
         </div>
 

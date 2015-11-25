@@ -19,7 +19,10 @@
 </head>
 <body>
     {% include 'layout/main_nav.html' %}
+
     {% block body %}{% endblock %}
+
+    {% include 'layout/main_footer.html' %}
 
     {% block javascript %}{% endblock %}
 </body>
