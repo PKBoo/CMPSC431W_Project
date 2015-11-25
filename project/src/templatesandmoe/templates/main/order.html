@@ -16,11 +16,25 @@
                         {{ form.number.label }}
                         {{ form.number(class='form-control') }}
                     </div>
+
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
+
+                            {{ form.expiration.label }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                {{ form.expiration.label }}
-                                {{ form.expiration(class='form-control') }}
+                                {{ form.expiration_month.label }}
+                                {{ form.expiration_month(class='form-control') }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                {{ form.expiration_year.label }}
+                                {{ form.expiration_year(class='form-control') }}
                             </div>
                         </div>
                         <div class="col-md-5 col-md-offset-1">
