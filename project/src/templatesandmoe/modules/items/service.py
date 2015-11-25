@@ -19,6 +19,18 @@ class ItemsService:
 
         return items
 
+    def get_template_by_id(self, item_id):
+        template = self.database.execute(text(
+            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
+                    'U.user_id, U.username '
+            'FROM Templates T '
+            'JOIN Items I ON I.item_id = T.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+            'WHERE I.item_id = :item_id'
+        ), { 'item_id': item_id }).fetchone()
+
+        return template
+
     def get_all_templates(self):
         templates = self.database.execute(
             'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
