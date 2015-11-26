@@ -22,10 +22,9 @@ def year_choices():
 class PaymentInformationForm(Form):
     name = StringField('Name on Card', validators=[DataRequired(message='Name on card is required.')])
     number = StringField('Card Number', validators=[DataRequired('Card number is required.')])
-    expiration = StringField('Expiration', validators=[DataRequired('Expiration date is required.')])
 
-    expiration_month = SelectField('Month', choices=month_choices())
-    expiration_year = SelectField('Year', choices=year_choices())
+    expiration_month = SelectField('Month', choices=month_choices(), coerce=int, validators=[DataRequired('Expiration month is required.')])
+    expiration_year = SelectField('Year', choices=year_choices(), coerce=int, validators=[DataRequired('Expiration year is required.')])
 
     cvc = StringField('CVC/CW', validators=[DataRequired('Security code is required.')])
 
