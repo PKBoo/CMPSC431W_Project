@@ -20,7 +20,6 @@ class OrdersService:
         return transaction
 
     def create_order(self, user_id, card_payment, items):
-        # Insert into transaction table, and return the transaction_id of the new row
         try:
             transaction = self.database.execute(text(
                 'INSERT INTO Transactions (user_id, created_at, card_number, card_name, card_expiration, card_cvc) '

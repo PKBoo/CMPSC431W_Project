@@ -21,7 +21,11 @@ def order_summary(transaction_id):
     decoded_id = hashids.decode(transaction_id)
     transaction = orders.get_order_by_id(decoded_id)
 
-    return render_template('main/order_summary.html', transaction=transaction, order_id=transaction_id)
+    # make sure the currently logged in user owns this order
+    if transaction[0].user_id == session.get('user_id'):
+        return render_template('main/order_summary.html', transaction=transaction, order_id=transaction_id)
+    else:
+        return redirect('/login')
 
 
 @mainModule.route('/order/template/<int:item_id>', methods=['GET', 'POST'])
