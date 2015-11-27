@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, session
-from templatesandmoe import db_session
+from templatesandmoe import db_session, hashids
 from templatesandmoe.modules.items.service import ItemsService
 from templatesandmoe.modules.main.forms.payment_information import PaymentInformationForm
 from templatesandmoe.modules.orders.service import OrdersService
@@ -14,6 +14,14 @@ orders = OrdersService(database=db_session)
 def home():
     latest_templates = items.get_latest_templates(4)
     return render_template("main/home.html", latest_templates=latest_templates)
+
+
+@mainModule.route('/orders/<string:transaction_id>', methods=['GET'])
+def order_summary(transaction_id):
+    decoded_id = hashids.decode(transaction_id)
+    transaction = orders.get_order_by_id(decoded_id)
+
+    return render_template('main/order_summary.html', transaction=transaction, order_id=transaction_id)
 
 
 @mainModule.route('/order/template/<int:item_id>', methods=['GET', 'POST'])
@@ -31,8 +39,8 @@ def order_item(item_id):
                                    payment_form.expiration_year.data,
                                    payment_form.cvc.data)
                 transaction_id = orders.create_order(session.get('user_id'), card, [template.item_id])
-                
-                return redirect('/orders/' + str(transaction_id))
+                encoded_transaction_id = hashids.encode(transaction_id)
+                return redirect('/orders/' + encoded_transaction_id)
             else:
                 return render_template('main/order.html', template=template, form=payment_form)
         else:

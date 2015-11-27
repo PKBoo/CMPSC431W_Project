@@ -5,6 +5,20 @@ class OrdersService:
     def __init__(self, database):
         self.database = database
 
+    def get_order_by_id(self, transaction_id):
+        transaction = self.database.execute(text(
+            'SELECT T.transaction_id, T.user_id, T.created_at, I.item_id, I.name, I.price, '
+                'T.card_name, T.card_number, SUM(I.price) as total '
+            'FROM Transactions T '
+            'JOIN Transaction_Items TI ON T.transaction_id = TI.transaction_id '
+            'JOIN Items I ON TI.item_id = I.item_id '
+            'WHERE T.transaction_id = :transaction_id'
+        ), {
+            'transaction_id': transaction_id
+        }).fetchall()
+
+        return transaction
+
     def create_order(self, user_id, card_payment, items):
         # Insert into transaction table, and return the transaction_id of the new row
         try:

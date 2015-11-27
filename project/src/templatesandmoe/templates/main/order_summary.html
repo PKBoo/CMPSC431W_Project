@@ -1,0 +1,48 @@
+{% extends "layout/main.html" %}
+{% block title %}- Login{% endblock %}
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h3>Order Summary</h3>
+
+                <p><strong>Order Number:</strong> {{ order_id }}</p>
+                <p><strong>Order Placed:</strong> {{ transaction[0].created_at }}</p>
+
+                <h4>Items</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td><strong>Item</strong></td>
+                            <td><strong>Price</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in transaction %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.price }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td>{{ transaction[0].total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a href="#" class="btn btn-success">
+
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                    Download
+                </a>
+            </div>
+            <div class="col-md-4">
+                <h3>Payment Details</h3>
+                <p><strong>Name:</strong> {{ transaction[0].card_name }}</p>
+                <p><strong>Number: </strong> {{ transaction[0].card_number }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
