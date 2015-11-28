@@ -5,10 +5,12 @@ from templatesandmoe.modules.items.service import ItemsService
 from templatesandmoe.modules.main.forms.payment_information import PaymentInformationForm
 from templatesandmoe.modules.orders.service import OrdersService
 from templatesandmoe.modules.orders.models import CardPayment
+from templatesandmoe.modules.categories.service import CategoriesService
 
 mainModule = Blueprint('main', __name__)
 items = ItemsService(database=db_session)
 orders = OrdersService(database=db_session)
+categories = CategoriesService(database=db_session)
 
 
 @mainModule.route('/', methods=['GET'])
@@ -54,9 +56,13 @@ def order_item(item_id):
         return redirect('/login')
 
 
-@mainModule.route('/templates/', defaults={ 'page': 1 })
-@mainModule.route('/templates/page/<int:page>')
-def all_templates(page):
-    templates = items.get_filtered_templates(page=page)
-    pagination = Pagination(page, 16, items.templates_count())
-    return render_template('main/templates.html', templates=templates, pagination=pagination)
+@mainModule.route('/templates/', defaults={ 'page': 1, 'category': 0 })
+@mainModule.route('/templates/<int:category>/page/<int:page>')
+def all_templates(category, page):
+    templates = items.get_filtered_templates(page=page, templates_per_page=15)
+    pagination = Pagination(page, 15, items.templates_count())
+    category_tree = categories.get_children(root_category=category)
+    return render_template('main/templates.html',
+                           templates=templates,
+                           pagination=pagination,
+                           categories=category_tree)
