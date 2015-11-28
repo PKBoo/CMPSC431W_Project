@@ -43,6 +43,32 @@ class ItemsService:
 
         return templates
 
+    def templates_count(self):
+        count = self.database.execute(
+            'SELECT COUNT(*) FROM Templates'
+        ).scalar()
+
+        return count
+
+    def get_filtered_templates(self, page=1, templates_per_page=16, category=None, keywords=None):
+        query =  (
+            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
+                'C.name AS category_name, U.username '
+            'FROM Templates T '
+            'JOIN Items I ON I.item_id = T.item_id '
+            'JOIN Categories C ON I.category_id = C.category_id '
+            'JOIN Users U ON U.user_id = I.user_id ')
+
+        page -= 1
+        limit = str((page * templates_per_page) + templates_per_page)
+        offset = str(page * templates_per_page)
+
+        query += ('LIMIT ' + limit + ' OFFSET ' + offset)
+
+        templates = self.database.execute(text(query)).fetchall()
+
+        return templates
+
     def get_templates_by_user_id(self, user_id):
         templates = self.database.execute(text(
             'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '

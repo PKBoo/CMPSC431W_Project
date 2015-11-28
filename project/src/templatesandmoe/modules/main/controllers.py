@@ -1,4 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, session
+from templatesandmoe.modules.core.pagination import Pagination
 from templatesandmoe import db_session, hashids
 from templatesandmoe.modules.items.service import ItemsService
 from templatesandmoe.modules.main.forms.payment_information import PaymentInformationForm
@@ -51,3 +52,11 @@ def order_item(item_id):
             return redirect('/')
     else:
         return redirect('/login')
+
+
+@mainModule.route('/templates/', defaults={ 'page': 1 })
+@mainModule.route('/templates/page/<int:page>')
+def all_templates(page):
+    templates = items.get_filtered_templates(page=page)
+    pagination = Pagination(page, 16, items.templates_count())
+    return render_template('main/templates.html', templates=templates, pagination=pagination)

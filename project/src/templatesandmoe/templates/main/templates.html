@@ -1,0 +1,67 @@
+{% extends "layout/main.html" %}
+
+{% macro render_pagination(pagination) %}
+  <ul class=pagination>
+      {% if pagination.has_prev %}
+        <li>
+            <a href="{{ url_for_other_page(pagination.page - 1) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+      {% endif %}
+      {% for page in pagination.iter_pages() %}
+          {% if page %}
+            {% if page != pagination.page %}
+                <li><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+            {% else %}
+                <li class="active"><a><strong>{{ page }}</strong></a></li>
+            {% endif %}
+          {% else %}
+                <span class=ellipsis>…</span>
+          {% endif %}
+      {% endfor %}
+      {% if pagination.has_next %}
+          <li>
+            <a href="{{ url_for_other_page(pagination.page + 1) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+      {% endif %}
+  </ul>
+{% endmacro %}
+
+
+{% block title %}- Login{% endblock %}
+{% block body %}
+
+    <div class="main container">
+        <div class="row">
+            {% for template in templates %}
+                <div class="col-md-3">
+                    <div class="thumbnail">
+                        <a href="/templates/{{ template.item_id }}">
+                            <img src="{{ url_for('static', filename='images/thumbnails/template_11.png') }}" />
+                        </a>
+                        <div class="caption">
+                            <h5 class="ellipsis"><a href="/templates/{{ template.item_id }}">{{ template.name }}</a></h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="price">{{ currency_format(template.price) }}</div>
+                                </div>
+                                <div class="col-md-4 col-md-offset-4">
+                                    <a class="btn btn-success" href="/order/template/{{ template.item_id }}">Buy</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                {{ render_pagination(pagination) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

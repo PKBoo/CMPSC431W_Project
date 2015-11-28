@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 
 from sqlalchemy import create_engine, MetaData
@@ -35,3 +35,18 @@ app.register_blueprint(apiModule)
 @app.teardown_request
 def close_db_session(exception):
     db_session.close()
+
+
+# jinja template helper functions
+
+def currency_format(decimal):
+    return '${:,.2f}'.format(decimal)
+
+
+def url_for_other_page(page):
+    args = request.view_args.copy()
+    args['page'] = page
+    return url_for(request.endpoint, **args)
+
+app.jinja_env.globals['url_for_other_page'] = url_for_other_page
+app.jinja_env.globals['currency_format'] = currency_format
