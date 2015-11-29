@@ -42,12 +42,12 @@
                         <input type="text" class="form-control" id="keywords" placeholder="Search" />
                     </div>
                     {% if categories|length > 0 %}
-                    <h4>Categories</h4>
-                    <ul>
-                        {% for category in categories %}
-                            <li><a href="{{ url_for('main.all_templates', category=category.category_id, page=1) }}">{{ category.name }}</a></li>
-                        {% endfor %}
-                    </ul>
+                        <h4>Categories</h4>
+                        <ul>
+                            {% for category in categories %}
+                                <li><a href="{{ url_for('main.all_templates', category=category.category_id, page=1) }}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                 </form>
             </div>

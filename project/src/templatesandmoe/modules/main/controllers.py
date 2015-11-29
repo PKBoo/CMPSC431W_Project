@@ -59,10 +59,10 @@ def order_item(item_id):
 @mainModule.route('/templates/', defaults={ 'page': 1, 'category': 0 })
 @mainModule.route('/templates/<int:category>/page/<int:page>')
 def all_templates(category, page):
-    templates = items.get_filtered_templates(page=page, templates_per_page=15)
+    templates = items.get_filtered_templates(page=page, templates_per_page=15, category=category)
     pagination = Pagination(page, 15, items.templates_count())
-    category_tree = categories.get_children(root_category=category)
+    child_categories = categories.get_children(root_category=category)
     return render_template('main/templates.html',
                            templates=templates,
                            pagination=pagination,
-                           categories=category_tree)
+                           categories=child_categories)

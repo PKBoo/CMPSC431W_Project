@@ -58,6 +58,11 @@ class ItemsService:
             'JOIN Items I ON I.item_id = T.item_id '
             'JOIN Categories C ON I.category_id = C.category_id '
             'JOIN Users U ON U.user_id = I.user_id ')
+        params = {}
+
+        if category is not None and category > 0:
+            query += ('WHERE I.category_id = :category_id ')
+            params['category_id'] = category
 
         page -= 1
         limit = str((page * templates_per_page) + templates_per_page)
@@ -65,7 +70,8 @@ class ItemsService:
 
         query += ('LIMIT ' + limit + ' OFFSET ' + offset)
 
-        templates = self.database.execute(text(query)).fetchall()
+
+        templates = self.database.execute(text(query), params).fetchall()
 
         return templates
 
