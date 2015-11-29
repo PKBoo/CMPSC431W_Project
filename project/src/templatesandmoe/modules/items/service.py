@@ -52,8 +52,6 @@ class ItemsService:
 
     def get_filtered_templates(self, page=1, templates_per_page=16, category=None, keywords=None):
         query =  (
-            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
-                'C.name AS category_name, U.username '
             'FROM Templates T '
             'JOIN Items I ON I.item_id = T.item_id '
             'JOIN Categories C ON I.category_id = C.category_id '
@@ -68,12 +66,18 @@ class ItemsService:
         limit = str((page * templates_per_page) + templates_per_page)
         offset = str(page * templates_per_page)
 
-        query += ('LIMIT ' + limit + ' OFFSET ' + offset)
+        # Need to also get the total row count for filtered results for pagination
+        count_query = ('SELECT COUNT(T.template_id) ') + query
+        count = self.database.execute(text(count_query), params).scalar()
 
+        query = ('SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
+                'C.name AS category_name, U.username ') + query
+
+        query += ('LIMIT ' + limit + ' OFFSET ' + offset)
 
         templates = self.database.execute(text(query), params).fetchall()
 
-        return templates
+        return [templates, int(count)]
 
     def get_templates_by_user_id(self, user_id):
         templates = self.database.execute(text(
