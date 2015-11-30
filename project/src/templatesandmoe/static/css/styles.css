@@ -123,3 +123,9 @@ body {
     margin-top: 5px;
 }
 
+.sidebar {
+    background: #fafafa;
+    border: 1px solid #EEE;
+    border-radius: 5px;
+    padding-top: 15px;
+}
