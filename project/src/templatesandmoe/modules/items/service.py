@@ -1,11 +1,11 @@
 from sqlalchemy.sql import text
-from sqlalchemy.exc import SQLAlchemyError
-from templatesandmoe.modules.items.models import Item
+from templatesandmoe.modules.categories.service import CategoriesService
 
 
 class ItemsService:
     def __init__(self, database):
         self.database = database
+        self.categories = CategoriesService(database=database)
 
     def get_all(self):
         items = self.database.execute(
@@ -51,7 +51,14 @@ class ItemsService:
         return count
 
     def get_filtered_templates(self, page=1, templates_per_page=16, category=None, keywords=None):
-        query =  (
+
+        # First get a list of category ids to search in
+        # We need to do this so we show all items that belong to any subcategories
+        # eg. When looking at 'Resume' we need to also show items that belong to the
+        # subcategory 'CV'
+        category_ids = self.categories.get_root_to_children_path(category)
+
+        query = (
             'FROM Templates T '
             'JOIN Items I ON I.item_id = T.item_id '
             'JOIN Categories C ON I.category_id = C.category_id '
@@ -59,15 +66,15 @@ class ItemsService:
         params = {}
 
         if category is not None and category > 0:
-            query += ('WHERE I.category_id = :category_id ')
-            params['category_id'] = category
+            query += 'WHERE I.category_id IN :category_ids '
+            params['category_ids'] = category_ids
 
         page -= 1
         limit = str((page * templates_per_page) + templates_per_page)
         offset = str(page * templates_per_page)
 
         # Need to also get the total row count for filtered results for pagination
-        count_query = ('SELECT COUNT(T.template_id) ') + query
+        count_query = 'SELECT COUNT(T.template_id) ' + query
         count = self.database.execute(text(count_query), params).scalar()
 
         query = ('SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '

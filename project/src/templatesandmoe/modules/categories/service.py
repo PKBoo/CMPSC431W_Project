@@ -5,28 +5,40 @@ class CategoriesService:
     def __init__(self, database):
         self.database = database
 
-    def get_children(self, root_category=None):
-        """
-        SELECT t1.name AS lev1, t2.name as lev2, t3.name as lev3, t4.name as lev4
-        FROM category AS t1
-        LEFT JOIN category AS t2 ON t2.parent = t1.category_id
-        LEFT JOIN category AS t3 ON t3.parent = t2.category_id
-        LEFT JOIN category AS t4 ON t4.parent = t3.category_id
-        WHERE t1.name = 'ELECTRONICS';
-        :param root_category:
-        :return:
-        """
+    def get_children(self, root_category=0):
 
         query = (
             'SELECT category_id, name '
             'FROM Categories '
+            'WHERE parent_id = :category_id'
         )
-
-        if root_category is None:
-            query += ('WHERE parent_id = 0')
-        else:
-            query += ('WHERE parent_id = :category_id')
 
         tree = self.database.execute(query, { 'category_id': root_category}).fetchall()
 
         return tree
+
+    def get_root_to_children_path(self, category):
+
+        category_ids = []
+        if category is not None and category > 0:
+            category_query = (
+                'SELECT root.category_id AS root_id, down1.category_id as down1_id, down2.category_id as down2_id '
+                'FROM Categories AS root '
+                'LEFT OUTER JOIN Categories AS down1 ON down1.parent_id = root.category_id '
+                'LEFT OUTER JOIN Categories AS down2 ON down2.parent_id = down1.category_id '
+                'WHERE root.category_id = :category_id'
+            )
+
+            paths = self.database.execute(text(category_query), {'category_id': category}).fetchall()
+
+            # Query results are all of the category paths that start with 'category'
+            # Place each unique category id in a dictionary
+            for path in paths:
+                if path.root_id not in category_ids and path.root_id is not None:
+                    category_ids.append(int(path.root_id))
+                if path.down1_id not in category_ids and path.down1_id is not None:
+                    category_ids.append(int(path.down1_id))
+                if path.down2_id not in category_ids and path.down2_id is not None:
+                    category_ids.append(int(path.down2_id))
+
+        return category_ids
