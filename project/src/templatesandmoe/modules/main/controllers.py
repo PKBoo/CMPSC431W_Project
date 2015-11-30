@@ -62,7 +62,13 @@ def all_templates(category, page):
     templates, count = items.get_filtered_templates(page=page, templates_per_page=15, category=category)
     pagination = Pagination(page, 15, count)
     child_categories = categories.get_children(root_category=category)
+
+    breadcrumb = None
+    if category > 0:
+        breadcrumb = categories.get_path_to_root(category)
+
     return render_template('main/templates.html',
                            templates=templates,
                            pagination=pagination,
-                           categories=child_categories)
+                           categories=child_categories,
+                           breadcrumb=breadcrumb)

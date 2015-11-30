@@ -52,6 +52,22 @@
                 </form>
             </div>
             <div class="col-md-9">
+                {% if breadcrumb %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="{{ url_for('main.all_templates', category=0, page=1) }}">All</a></li>
+                            {% if breadcrumb.up2_name %}
+                                <li><a href="{{ url_for('main.all_templates', category=breadcrumb.up2_id, page=1) }}">{{ breadcrumb.up2_name }}</a></li>
+                            {% endif %}
+                            {% if breadcrumb.up1_name %}
+                                <li><a href="{{ url_for('main.all_templates', category=breadcrumb.up1_id, page=1) }}">{{ breadcrumb.up1_name }}</a></li>
+                            {% endif %}
+                            <li><a href="{{ url_for('main.all_templates', category=breadcrumb.root_id, page=1) }}">{{ breadcrumb.root_name }}</a></li>
+                        </ol>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row">
                     {% for template in templates %}
                         <div class="col-md-4">

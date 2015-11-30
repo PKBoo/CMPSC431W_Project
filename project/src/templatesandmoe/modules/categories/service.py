@@ -42,3 +42,18 @@ class CategoriesService:
                     category_ids.append(int(path.down2_id))
 
         return category_ids
+
+    def get_path_to_root(self, start_category):
+        query = (
+            'SELECT root.category_id AS root_id, root.name AS root_name, '
+                'up1.category_id as up1_id, up1.name AS up1_name, '
+                'up2.category_id as up2_id, up2.name AS up2_name '
+            'FROM Categories AS root '
+            'LEFT OUTER JOIN Categories AS up1 ON up1.category_id = root.parent_id '
+            'LEFT OUTER JOIN Categories AS up2 ON up2.category_id = up1.parent_id '
+            'WHERE root.category_id = :category_id'
+        )
+
+        path = self.database.execute(text(query), {'category_id': start_category}).fetchone()
+
+        return path

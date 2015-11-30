@@ -52,12 +52,6 @@ class ItemsService:
 
     def get_filtered_templates(self, page=1, templates_per_page=16, category=None, keywords=None):
 
-        # First get a list of category ids to search in
-        # We need to do this so we show all items that belong to any subcategories
-        # eg. When looking at 'Resume' we need to also show items that belong to the
-        # subcategory 'CV'
-        category_ids = self.categories.get_root_to_children_path(category)
-
         query = (
             'FROM Templates T '
             'JOIN Items I ON I.item_id = T.item_id '
@@ -66,6 +60,10 @@ class ItemsService:
         params = {}
 
         if category is not None and category > 0:
+            # Get a list of category ids to search in
+            # We need to do this to show all items that belong to any subcategories
+            # eg. When looking at 'Resume' we need to also show items that belong to the subcategory 'CV'
+            category_ids = self.categories.get_root_to_children_path(category)
             query += 'WHERE I.category_id IN :category_ids '
             params['category_ids'] = category_ids
 
