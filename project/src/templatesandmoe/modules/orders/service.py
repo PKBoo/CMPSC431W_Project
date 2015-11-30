@@ -1,5 +1,6 @@
 from sqlalchemy.sql import text
-
+from templatesandmoe.modules.core.database import insert
+import datetime
 
 class OrdersService:
     def __init__(self, database):
@@ -21,27 +22,22 @@ class OrdersService:
 
     def create_order(self, user_id, card_payment, items):
         try:
-            transaction = self.database.execute(text(
-                'INSERT INTO Transactions (user_id, created_at, card_number, card_name, card_expiration, card_cvc) '
-                'VALUES (:user_id, NOW(), :card_number, :card_name, :card_expiration, :card_cvc)'
-            ), {
-                'user_id': user_id,
-                'card_name': card_payment.name,
-                'card_number': card_payment.number,
-                'card_expiration': card_payment.expiration.isoformat(),
-                'card_cvc': card_payment.cvc
-            })
+            transaction = insert(self.database, 'Transactions', [
+                ('user_id', user_id),
+                ('created_at', datetime.datetime.now().isoformat()),
+                ('card_number', card_payment.number),
+                ('card_name', card_payment.name),
+                ('card_expiration', card_payment.expiration.isoformat()),
+                ('card_cvc', card_payment.cvc)
+            ])
 
             transaction_id = transaction.lastrowid
 
             for item_id in items:
-                self.database.execute(text(
-                    'INSERT INTO Transaction_Items (transaction_id, item_id) '
-                    'VALUES (:transaction_id, :item_id)'
-                ), {
-                    'transaction_id': transaction_id,
-                    'item_id': item_id
-                })
+                insert(self.database, 'Transaction_Items', [
+                    ('transaction_id', transaction_id),
+                    ('item_id', item_id)
+                ])
 
             self.database.commit()
 

@@ -72,3 +72,5 @@ def all_templates(category, page):
                            pagination=pagination,
                            categories=child_categories,
                            breadcrumb=breadcrumb)
+
+
