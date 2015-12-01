@@ -4,6 +4,19 @@ from sqlalchemy.sql import text
 
 
 def insert(session, table, parameters):
+    """
+    Inserts a new record into a table
+
+    Args:
+        session: Database session
+        table: Table to insert the new record in
+        parameters: A list of tuples where each tuple defines the field
+                    and value to set for that field.
+
+    Returns: SQLAlchemy ResultProxy
+
+    """
+
     fields = [field for field, _ in parameters]
     fields_string = ','.join(fields)
     param_fields = [':' + field for field,_ in parameters]

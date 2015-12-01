@@ -50,7 +50,7 @@ class ItemsService:
 
         return count
 
-    def get_filtered_templates(self, page=1, templates_per_page=16, category=None, keywords=None):
+    def get_filtered_templates(self, page=1, templates_per_page=16, price_start=None, price_end=None, category=None, keywords=None):
 
         query = (
             'FROM Templates T '
@@ -58,14 +58,31 @@ class ItemsService:
             'JOIN Categories C ON I.category_id = C.category_id '
             'JOIN Users U ON U.user_id = I.user_id ')
         params = {}
+        where_clauses = []
+
+        # Build where clause by appending each condition to a list, then joining at the end.
 
         if category is not None and category > 0:
             # Get a list of category ids to search in
             # We need to do this to show all items that belong to any subcategories
             # eg. When looking at 'Resume' we need to also show items that belong to the subcategory 'CV'
             category_ids = self.categories.get_root_to_children_path(category)
-            query += 'WHERE I.category_id IN :category_ids '
+            where_clauses.append('I.category_id IN :category_ids ')
             params['category_ids'] = category_ids
+
+        if price_start:
+            where_clauses.append('I.price >= :price_start')
+            params['price_start'] = float(price_start)
+
+        if price_end:
+            where_clauses.append('I.price <= :price_end')
+            params['price_end'] = float(price_end)
+
+        if len(where_clauses) > 0:
+            where_clauses[0] = 'WHERE ' + where_clauses[0]
+
+        final_where_clause = ' AND '.join(where_clauses) + ' '
+        query += final_where_clause
 
         page -= 1
         limit = str((page * templates_per_page) + templates_per_page)
@@ -73,6 +90,7 @@ class ItemsService:
 
         # Need to also get the total row count for filtered results for pagination
         count_query = 'SELECT COUNT(T.template_id) ' + query
+        print(count_query)
         count = self.database.execute(text(count_query), params).scalar()
 
         query = ('SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '

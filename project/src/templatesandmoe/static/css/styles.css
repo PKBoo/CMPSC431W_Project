@@ -127,5 +127,15 @@ body {
     background: #fafafa;
     border: 1px solid #EEE;
     border-radius: 5px;
-    padding-top: 15px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+
+.sidebar h4 {
+    margin: 0 0 10px 0;
+}
+
+.category-list {
+    list-style-type: none;
+    padding: 0;
 }
