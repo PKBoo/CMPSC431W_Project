@@ -61,12 +61,14 @@ def order_item(item_id):
 def all_templates(category, page):
     price_start = request.args.get('price-start')
     price_end = request.args.get('price-end')
+    search = request.args.get('search')
 
     templates, count = items.get_filtered_templates(page=page,
                                                     templates_per_page=15,
                                                     category=category,
                                                     price_start=price_start,
-                                                    price_end=price_end)
+                                                    price_end=price_end,
+                                                    search=search)
     pagination = Pagination(page, 15, count)
     child_categories = categories.get_children(root_category=category)
 
@@ -81,6 +83,7 @@ def all_templates(category, page):
                            breadcrumb=breadcrumb,
                            category=category,
                            price_start=price_start,
-                           price_end=price_end)
+                           price_end=price_end,
+                           search=search)
 
 

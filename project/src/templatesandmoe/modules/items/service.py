@@ -50,7 +50,7 @@ class ItemsService:
 
         return count
 
-    def get_filtered_templates(self, page=1, templates_per_page=16, price_start=None, price_end=None, category=None, keywords=None):
+    def get_filtered_templates(self, page=1, templates_per_page=16, price_start=None, price_end=None, category=None, search=None):
 
         query = (
             'FROM Templates T '
@@ -77,6 +77,10 @@ class ItemsService:
         if price_end:
             where_clauses.append('I.price <= :price_end')
             params['price_end'] = float(price_end)
+
+        if search:
+            where_clauses.append('I.name LIKE :keywords')
+            params['keywords'] = '%' + search + '%'
 
         if len(where_clauses) > 0:
             where_clauses[0] = 'WHERE ' + where_clauses[0]

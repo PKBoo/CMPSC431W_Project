@@ -52,14 +52,14 @@
 
                         <h4>Search</h4>
                         <div class="form-group">
-                            <input type="text" class="form-control input-sm" name="search" />
+                            <input type="text" class="form-control input-sm" name="search" {% if search is not none %} value="{{ search }}" {% endif %} />
                         </div>
 
                         <h4>Price Range</h4>
                         {% if price_start or price_end %}
                             <div class="row">
                                 <div class="col-md-12">
-                                    <a href="{{ url_for('main.all_templates', category=category, page=1) }}">Any Price</a>
+                                    <a href="{{ url_for('main.all_templates', category=category, page=1, search=search) }}">Any Price</a>
                                 </div>
                             </div>
                         {% endif %}
