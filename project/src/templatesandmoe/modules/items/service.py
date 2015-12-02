@@ -57,7 +57,8 @@ class ItemsService:
             'FROM Templates T '
             'JOIN Items I ON I.item_id = T.item_id '
             'JOIN Categories C ON I.category_id = C.category_id '
-            'JOIN Users U ON U.user_id = I.user_id ')
+            'JOIN Users U ON U.user_id = I.user_id '
+        )
         params = {}
         where_clauses = []
 
@@ -97,10 +98,14 @@ class ItemsService:
         count_query = 'SELECT COUNT(T.template_id) ' + query
         count = self.database.execute(text(count_query), params).scalar()
 
-        query = ('SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
-                'C.name AS category_name, U.username ') + query
+        query = (
+            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
+            'C.name AS category_name, U.username '
+        ) + query
 
-        query += ('LIMIT ' + limit + ' OFFSET ' + offset)
+        query += (
+            'LIMIT ' + limit + ' OFFSET ' + offset
+        )
 
         templates = self.database.execute(text(query), params).fetchall()
 
