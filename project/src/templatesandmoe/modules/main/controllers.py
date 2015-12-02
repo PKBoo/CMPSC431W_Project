@@ -120,3 +120,11 @@ def update_rating(item_id):
         return redirect(request.referrer)
     else:
         return redirect('/login')
+
+
+@mainModule.route('/sell')
+def sell():
+    if session.get('user_id'):
+        return render_template('main/sell.html')
+    else:
+        return redirect('/login')
