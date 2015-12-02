@@ -87,3 +87,9 @@ def all_templates(category, page):
                            search=search)
 
 
+@mainModule.route('/templates/<int:item_id>')
+def single_template(item_id):
+    template = items.get_template_by_id(item_id)
+    breadcrumb = categories.get_path_to_root(template.category_id)
+    return render_template('main/template.html', breadcrumb=breadcrumb, template=template)
+

@@ -205,14 +205,6 @@ ALTER TABLE Item_Tags ADD CONSTRAINT fk_ItemTags_Tags FOREIGN KEY (tag_id) REFER
 ALTER TABLE Transaction_Items ADD CONSTRAINT fk_transaction_items_transaction FOREIGN KEY (transaction_id) REFERENCES Transactions(transaction_id)
   ON DELETE CASCADE;
 
-ALTER TABLE Transactions ADD (
-	card_number int NOT NULL,
-    card_name varchar(200) NOT NULL,
-    card_expiration DATE NOT NULL,
-    card_cvc int NOT NULL
-);
-
-
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -3,9 +3,17 @@ body {
     background: #FFF;
 }
 
+img.large-preview {
+    width: 100%;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Lato';
     font-weight: bold;
+}
+
+h2.price {
+    margin: 0;
 }
 
 h5.ellipsis {
@@ -136,7 +144,19 @@ body {
     margin: 0 0 10px 0;
 }
 
+.panel-heading h4 { margin: 0; }
+
 .category-list {
     list-style-type: none;
     padding: 0;
+}
+
+
+/* Bootstrap overrides */
+.breadcrumb {
+    margin-bottom: 10px;
+}
+
+.page-header {
+    margin-top: 0;
 }

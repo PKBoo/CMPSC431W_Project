@@ -1,0 +1,54 @@
+{% extends "layout/main.html" %}
+
+{% block title %}- {{ template.name }}{% endblock %}
+{% block body %}
+
+    <div class="main container">
+       <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <li><a href="{{ url_for('main.all_templates', category=0, page=1) }}">All</a></li>
+                    {% if breadcrumb.up2_name %}
+                        <li><a href="{{ url_for('main.all_templates', category=breadcrumb.up2_id, page=1) }}">{{ breadcrumb.up2_name }}</a></li>
+                    {% endif %}
+                    {% if breadcrumb.up1_name %}
+                        <li><a href="{{ url_for('main.all_templates', category=breadcrumb.up1_id, page=1) }}">{{ breadcrumb.up1_name }}</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('main.all_templates', category=breadcrumb.root_id, page=1) }}">{{ breadcrumb.root_name }}</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>{{ template.name }}</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <img class="large-preview" src="{{ url_for('static', filename='templates_data/' + template.item_id|string + '/preview_' + template.item_id|string + '.jpg') }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Purchase</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2 class="price">{{ currency_format(template.price) }}</h2>
+                            </div>
+                            <div class="col-md-4 col-md-offset-2">
+                                <a class="btn btn-success btn-block btn-sm" href="{{ url_for('main.order_item', item_id=template.item_id) }}">Buy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
