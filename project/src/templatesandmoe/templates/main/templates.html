@@ -48,9 +48,14 @@
                     </div>
                 {% endif %}
                 <div class="sidebar">
-                    <h4>Price Range</h4>
                     <form method="GET">
 
+                        <h4>Search</h4>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm" name="search" />
+                        </div>
+
+                        <h4>Price Range</h4>
                         {% if price_start or price_end %}
                             <div class="row">
                                 <div class="col-md-12">

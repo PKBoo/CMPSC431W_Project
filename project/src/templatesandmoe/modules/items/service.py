@@ -90,7 +90,6 @@ class ItemsService:
 
         # Need to also get the total row count for filtered results for pagination
         count_query = 'SELECT COUNT(T.template_id) ' + query
-        print(count_query)
         count = self.database.execute(text(count_query), params).scalar()
 
         query = ('SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '

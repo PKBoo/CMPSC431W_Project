@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, session
+from flask import Blueprint, flash, redirect, render_template, request, session
 from templatesandmoe import db_session
 from templatesandmoe.modules.auth.forms.login import LoginForm
 from templatesandmoe.modules.auth.forms.register import RegisterForm
@@ -18,11 +18,15 @@ def login():
             session['username'] = user.username
             session['permission'] = user.permissions
 
-            return redirect('/')
+            if session.get('previous_page'):
+                return redirect(session.get('previous_page'))
+            else:
+                return redirect('/')
         else:
             flash(u'Invalid username or password', 'error')
             return render_template('auth/login.html', form=form)
     else:
+        session['previous_page'] = request.referrer
         return render_template('auth/login.html', form=form)
 
 
