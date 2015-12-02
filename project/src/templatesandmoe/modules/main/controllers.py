@@ -6,12 +6,13 @@ from templatesandmoe.modules.main.forms.payment_information import PaymentInform
 from templatesandmoe.modules.orders.service import OrdersService
 from templatesandmoe.modules.orders.models import CardPayment
 from templatesandmoe.modules.categories.service import CategoriesService
+from templatesandmoe.modules.ratings.service import RatingsService
 
 mainModule = Blueprint('main', __name__)
 items = ItemsService(database=db_session)
 orders = OrdersService(database=db_session)
 categories = CategoriesService(database=db_session)
-
+ratings = RatingsService(database=db_session)
 
 @mainModule.route('/', methods=['GET'])
 def home():
@@ -91,5 +92,31 @@ def all_templates(category, page):
 def single_template(item_id):
     template = items.get_template_by_id(item_id)
     breadcrumb = categories.get_path_to_root(template.category_id)
-    return render_template('main/template.html', breadcrumb=breadcrumb, template=template)
+    rating = ratings.get_average_by_template_id(template.template_id)
 
+    # if the user is logged in, determine if they have already rated this template.
+    user_rating = None
+    if session.get('user_id'):
+        user_rating = ratings.get_rating_for_template_by_user(template.template_id, session.get('user_id'))
+
+    return render_template('main/template.html',
+                           breadcrumb=breadcrumb,
+                           template=template,
+                           rating=rating,
+                           user_rating=user_rating)
+
+
+@mainModule.route('/templates/<int:item_id>/ratings', methods=['POST'])
+def update_rating(item_id):
+    if session.get('user_id'):
+        rating = request.form.get('rating')
+        user_rating = ratings.get_rating_for_template_by_user(item_id, session.get('user_id'))
+
+        if user_rating:
+            ratings.update_rating(item_id, session.get('user_id'), rating)
+        else:
+            ratings.add_rating(item_id, session.get('user_id'), rating)
+
+        return redirect(request.referrer)
+    else:
+        return redirect('/login')

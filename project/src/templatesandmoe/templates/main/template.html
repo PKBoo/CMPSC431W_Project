@@ -47,6 +47,61 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Rating</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                {% if rating is none %}
+                                    <p class="text-xl">No ratings</p>
+                                {% else %}
+                                    <p class="text-xl">{{ rating }} / 5</p>
+                                {% endif %}
+
+                                {% if user_rating is not none%}
+                                    <p><strong>Your rating: </strong> {{ user_rating }} / 5</p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                        {% if session.get('user_id') %}
+                            <form action="{{ url_for('main.update_rating', item_id=template.item_id) }}" method="POST" class="form-inline">
+                                <div class="input-group">
+                                    <select class="form-control input-sm" id="rating" name="rating">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    {% if user_rating is not none%}
+                                        <button type="submit" class="btn btn-primary btn-sm">Update Rating</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-primary btn-sm">Add Rating</button>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Seller</h4>
+                    </div>
+                    <div class="panel-body">
+                        <a href="#" class="text-xl">{{ template.username }}</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
