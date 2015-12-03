@@ -4,7 +4,7 @@ from config import TEMPLATES_DATA_PATH
 from templatesandmoe.modules.core.pagination import Pagination
 from templatesandmoe import db_session, hashids
 from templatesandmoe.modules.items.service import ItemsService
-from templatesandmoe.modules.items.forms import AddTemplateForm
+from templatesandmoe.modules.items.forms import AddTemplateForm, AddServiceForm
 from templatesandmoe.modules.main.forms.payment_information import PaymentInformationForm
 from templatesandmoe.modules.orders.service import OrdersService
 from templatesandmoe.modules.orders.models import CardPayment
@@ -131,6 +131,24 @@ def update_rating(item_id):
 def sell():
     if session.get('user_id'):
         template_form = AddTemplateForm()
+        service_form = AddServiceForm()
+
+        all_categories = categories.get_all()
+        categories_select_datasource = []
+        for cat in all_categories:
+            categories_select_datasource.append((cat.category_id, cat.name))
+        template_form.category.choices = categories_select_datasource
+
+        return render_template('main/sell.html', template_form=template_form, service_form=service_form)
+    else:
+        return redirect('/login')
+
+
+@mainModule.route('/sell/template', methods=['GET', 'POST'])
+def sell_template():
+    if session.get('user_id'):
+        template_form = AddTemplateForm()
+
         all_categories = categories.get_all()
         categories_select_datasource = []
         for cat in all_categories:
@@ -162,12 +180,34 @@ def sell():
             except Exception as e:
                 print(e)
                 return 'Something terrible happened.'
-
         else:
-            return render_template('main/sell.html', template_form=template_form)
+            return render_template('main/sell_template.html', template_form=template_form)
     else:
         return redirect('/login')
 
+
+@mainModule.route('/sell/service', methods=['GET', 'POST'])
+def sell_service():
+
+    if session.get('user_id'):
+        service_form = AddServiceForm()
+
+        if service_form.validate_on_submit():
+            try:
+                item_id = items.add_service(session.get('user_id'),
+                                            service_form.name.data,
+                                            service_form.start_price.data,
+                                            service_form.description.data,
+                                            service_form.end_date.data)
+
+                return redirect('/services/' + str(item_id))
+            except Exception as e:
+                print(e)
+                return 'Something terrible happened.'
+        else:
+            return render_template('main/sell_service.html', service_form=service_form)
+    else:
+        return redirect('/login')
 
 @mainModule.route('/services/', defaults={'page': 1})
 @mainModule.route('/services/page/<int:page>')
@@ -192,20 +232,20 @@ def single_service(item_id):
 def place_bid(item_id):
     user_id = session.get('user_id')
     amount = request.form.get('amount')
-
-    # Make sure bid amount is a valid currency amount
-    try:
-        amount = float("{0:.2f}".format(float(amount)))
-    except:
-        flash('Bid must be a valid amount.', category='bid')
-        return redirect(request.referrer)
-
     if user_id:
+
         service = items.get_service_by_id(item_id)
         highest_bid = auctions.get_highest_bid(service.service_id)
         bid_check_amount = highest_bid.amount
         if highest_bid is None:
             bid_check_amount = service.start_price
+
+        # Make sure bid amount is a valid currency amount
+        try:
+            amount = float("{0:.2f}".format(float(amount)))
+        except:
+            flash('Bid must be a valid amount.', category='bid')
+            return redirect(request.referrer)
 
         # Don't allow bidding if current user is the owner of the service
         # or if the current user is currently the highest bidder (only if bids exist)

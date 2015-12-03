@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
-from wtforms.fields import StringField, PasswordField, SelectField, TextAreaField, FileField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.fields import StringField, DateTimeField, SelectField, TextAreaField, FileField, HiddenField
+from wtforms.validators import DataRequired, ValidationError
 from werkzeug.utils import secure_filename
 
 
@@ -36,7 +36,6 @@ def validate_price(self, field):
     except:
         raise ValidationError('Price must be a number.')
 
-
 class AddTemplateForm(Form):
     name = StringField('Name', validators=[DataRequired(message='Name is required.')])
     price = StringField('Price', validators=[DataRequired(message='Price is required.'), validate_price])
@@ -45,4 +44,8 @@ class AddTemplateForm(Form):
     preview = FileField('Image Preview', validators=[validate_preview])
     files = FileField('Files (Zip)', validators=[DataRequired(message='Files are required.'), validate_files])
 
-
+class AddServiceForm(Form):
+    name = StringField('Name', validators=[DataRequired(message='Name is required.')])
+    start_price = StringField('Start Price', validators=[DataRequired(message='Start price is required.'), validate_price])
+    description = TextAreaField('Description', validators=[DataRequired(message='Description is required.')])
+    end_date = DateTimeField('End date', format='%m/%d/%Y %H:%M %p', validators=[DataRequired(message='End date is required.')])

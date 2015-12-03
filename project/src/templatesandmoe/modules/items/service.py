@@ -240,3 +240,27 @@ class ItemsService:
         print(count)
         print(query)
         return [services, int(count)]
+
+    def add_service(self, user_id, name, start_price, description, end_date):
+        try:
+            item = insert(self.database, 'Items', [
+                ('user_id', user_id),
+                ('name', name),
+                ('price', start_price),
+                ('created_at', datetime.datetime.now().isoformat()),
+                ('description', description)
+            ])
+
+            item_id = item.lastrowid
+
+            service = insert(self.database, 'Services', [
+                ('item_id', item_id),
+                ('end_date', end_date)
+            ])
+
+            self.database.commit()
+
+            return item_id
+        except:
+            self.database.rollback()
+            raise

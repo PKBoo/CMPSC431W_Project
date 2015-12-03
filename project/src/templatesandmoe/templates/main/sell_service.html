@@ -1,0 +1,68 @@
+{% extends "layout/main.html" %}
+
+{% block title %}- Sell{% endblock %}
+{% block body %}
+    <div class="main container">
+        <div class="page-header">
+            <h2>Sell Service</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h3>Service Details</h3>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                {% for field, errors in service_form.errors.items() %}
+                    <div class="alert alert-dismissable alert-bg-white alert-danger">
+                        {{ errors[0] }}
+                    </div>
+                {% endfor %}
+
+                <form action="{{ url_for('main.sell_service') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                    {{ service_form.csrf_token }}
+                    <div class="form-group">
+                        {{ service_form.name.label(class='col-sm-2 control-label') }}
+                        <div class="col-sm-5">
+                            {{ service_form.name(id_='name', class_='form-control') }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ service_form.start_price.label(class='col-sm-2 control-label') }}
+                        <div class="col-sm-3">
+                            {{ service_form.start_price(class='form-control') }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ service_form.description.label(class='col-sm-2 control-label') }}
+                        <div class="col-sm-5">
+                            {{ service_form.description(class='form-control', rows=8) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ service_form.end_date.label(class='col-sm-2 control-label') }}
+                        <div class="col-sm-5">
+                            {{ service_form.end_date(class='form-control') }}
+                            <span id="end-date-help" class="help-block">Date must be in the following format: 9/23/2016 6:30 AM/PM</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

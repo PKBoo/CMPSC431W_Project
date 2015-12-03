@@ -13,10 +13,16 @@
 
                     {% if session.username %}
 
-                        <li><a href="/sell">Sell</a></li>
+                        <li class="selllink dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sell <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/sell/template">Template</a></li>
+                                <li><a href="/sell/service">Service</a></li>
+                            </ul>
+                        </li>
                         <li class="userlink">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ session.username }} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right">
