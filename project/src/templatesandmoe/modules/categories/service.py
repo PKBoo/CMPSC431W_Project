@@ -5,6 +5,11 @@ class CategoriesService:
     def __init__(self, database):
         self.database = database
 
+    def get_all(self):
+        categories = self.database.execute('SELECT category_id, name FROM Categories ORDER BY name').fetchall()
+
+        return categories
+
     def get_children(self, root_category=0):
 
         query = (

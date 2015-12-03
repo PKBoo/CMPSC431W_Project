@@ -164,3 +164,8 @@ body {
 .page-header {
     margin-top: 0;
 }
+
+.thumbnail a>img,
+.thumbnail > img {
+    height: 158px;
+}

@@ -1,7 +1,10 @@
+import os
 from flask import Blueprint, request, render_template, redirect, session
+from config import TEMPLATES_DATA_PATH
 from templatesandmoe.modules.core.pagination import Pagination
 from templatesandmoe import db_session, hashids
 from templatesandmoe.modules.items.service import ItemsService
+from templatesandmoe.modules.items.forms import AddTemplateForm
 from templatesandmoe.modules.main.forms.payment_information import PaymentInformationForm
 from templatesandmoe.modules.orders.service import OrdersService
 from templatesandmoe.modules.orders.models import CardPayment
@@ -122,9 +125,44 @@ def update_rating(item_id):
         return redirect('/login')
 
 
-@mainModule.route('/sell')
+@mainModule.route('/sell', methods=['GET', 'POST'])
 def sell():
     if session.get('user_id'):
-        return render_template('main/sell.html')
+        template_form = AddTemplateForm()
+        all_categories = categories.get_all()
+        categories_select_datasource = []
+        for cat in all_categories:
+            categories_select_datasource.append((cat.category_id, cat.name))
+        template_form.category.choices = categories_select_datasource
+
+        if template_form.validate_on_submit():
+            # Insert the template into the database, then create a folder for it in templates_data
+            try:
+                item_id = items.add_template(
+                    session.get('user_id'),
+                    template_form.name.data,
+                    template_form.price.data,
+                    template_form.description.data,
+                    template_form.category.data)
+
+                data_folder = TEMPLATES_DATA_PATH + '/' + str(item_id) + '/'
+                os.makedirs(data_folder)
+
+                # Create preview image from uploaded file
+                preview_data = request.files[template_form.preview.name].read()
+                open(os.path.join(data_folder, 'preview_' + str(item_id) + '.jpg'), 'wb').write(preview_data)
+
+                # Create zip file from uploaded file
+                files_data = request.files[template_form.files.name].read()
+                open(os.path.join(data_folder, 'download_' + str(item_id) + '.zip'), 'wb').write(files_data)
+
+                return redirect('/templates/' + str(item_id))
+            except Exception as e:
+                print(e)
+                return 'Something terrible happened.'
+
+
+        else:
+            return render_template('main/sell.html', template_form=template_form)
     else:
         return redirect('/login')

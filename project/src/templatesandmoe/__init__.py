@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -49,5 +50,16 @@ def url_for_other_page(page):
     args.update(request.args)
     return url_for(request.endpoint, **args)
 
+
+def template_preview_url(item_id):
+    if os.path.isfile(app.config['TEMPLATES_DATA_PATH'] + '/' + str(item_id) + '/' + 'preview_' + str(item_id) + '.jpg'):
+        return url_for(
+            'static',
+            filename='templates_data/' + str(item_id) + '/preview_' + str(item_id) + '.jpg'
+        )
+    else:
+        return url_for('static', filename='images/default_preview.png')
+
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['currency_format'] = currency_format
+app.jinja_env.globals['template_preview_url'] = template_preview_url

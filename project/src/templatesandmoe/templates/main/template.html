@@ -27,7 +27,11 @@
             <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <img class="large-preview" src="{{ url_for('static', filename='templates_data/' + template.item_id|string + '/preview_' + template.item_id|string + '.jpg') }}" />
+                        <img class="large-preview" src="{{ template_preview_url(template.item_id) }}" />
+                        {% if template.description %}
+                            <h4>Description</h4>
+                            <p>{{ template.description }}</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 .vagrant
+project/src/templatesandmoe/static/templates_data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

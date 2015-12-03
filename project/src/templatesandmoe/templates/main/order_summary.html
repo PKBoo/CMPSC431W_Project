@@ -16,6 +16,7 @@
                         <tr>
                             <td><strong>Item</strong></td>
                             <td><strong>Price</strong></td>
+                            <td><strong>Download</strong></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,20 +24,20 @@
                         <tr>
                             <td>{{ item.name }}</td>
                             <td>{{ item.price }}</td>
+                            <td>
+                                <a title="Download" class="text-success" href="{{ url_for('static', filename='templates_data/' + item.item_id|string + '/download_' + item.item_id|string + '.zip') }}">
+                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                         <tr>
                             <td><strong>Total</strong></td>
                             <td>{{ transaction[0].total }}</td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
-
-                <a href="#" class="btn btn-success">
-
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                    Download
-                </a>
             </div>
             <div class="col-md-4">
                 <h3>Payment Details</h3>

@@ -1,5 +1,7 @@
+import datetime
 from sqlalchemy.sql import text
 from templatesandmoe.modules.categories.service import CategoriesService
+from templatesandmoe.modules.core.database import insert
 
 
 class ItemsService:
@@ -21,8 +23,8 @@ class ItemsService:
 
     def get_template_by_id(self, item_id):
         template = self.database.execute(text(
-            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
-                    'C.name AS category_name, C.category_id AS category_id, U.user_id, U.username '
+            'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.description, '
+                    'I.created_at, C.name AS category_name, C.category_id AS category_id, U.user_id, U.username '
             'FROM Templates T '
             'JOIN Items I ON I.item_id = T.item_id '
             'JOIN Categories C ON I.category_id = C.category_id '
@@ -155,3 +157,28 @@ class ItemsService:
         ), { 'limit': limit})
 
         return templates
+
+    def add_template(self, user_id, name, price, description, category, tags=[]):
+        try:
+            item = insert(self.database, 'Items', [
+                ('user_id', user_id),
+                ('category_id', category),
+                ('name', name),
+                ('price', price),
+                ('created_at', datetime.datetime.now().isoformat()),
+                ('description', description)
+            ])
+
+            item_id = item.lastrowid
+
+            template = insert(self.database, 'Templates', [
+                ('item_id', item_id),
+                ('file_path', '')
+            ])
+
+            self.database.commit()
+
+            return item_id
+        except:
+            self.database.rollback
+            raise
