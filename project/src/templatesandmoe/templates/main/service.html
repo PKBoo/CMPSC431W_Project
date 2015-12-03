@@ -1,0 +1,97 @@
+{% extends "layout/main.html" %}
+{% block title %}- Services{% endblock %}
+{% block body %}
+    <div class="main container">
+        <div class="page-header">
+            <h2>{{ service.name }}</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                {% if service.description is not none %}
+                    <p>{{ service.description }}</p>
+                {% else %}
+                    <p>No description</p>
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Bids</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <td><strong>Created By</strong></td>
+                                <td><strong>Amount</strong></td>
+                                <td><strong>Date Placed</strong></td>
+                            </thead>
+                            <tbody>
+                                {% for bid in bids %}
+                                    <tr {% if bid.user_id == session.get('user_id') %} class="success" {% endif %}>
+                                        <td>{{ bid.username }}</td>
+                                        <td>{{ currency_format(bid.amount) }}</td>
+                                        <td>{{ time_format(bid.created_at) }}</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td>Starting Price</td>
+                                    <td>{{ currency_format(service.start_price) }}</td>
+                                    <td>{{ time_format(service.created_at) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                {% if session.get('user_id') != service.user_id %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Place Bid</h4>
+                        </div>
+                        <div class="panel-body">
+                            <strong>Ends: </strong>{{ time_format(service.end_date) }}
+                            <div class="v-spacer"></div>
+
+                            {% with errors = get_flashed_messages(category_filter=["bid"]) %}
+                            {% if errors %}
+                                {%- for msg in errors %}
+                                    <div class="alert alert-danger">
+                                        {{ msg }}
+                                    </div>
+                                {% endfor -%}
+                            {% endif %}
+                            {% endwith %}
+
+                            <form action="{{ url_for('main.place_bid', item_id=service.item_id) }}" method="POST">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control input-sm" name="amount" />
+                                        <small>Bid must be greater than
+                                            {% if service.highest_bid is not none %}
+                                                {{ currency_format(service.highest_bid) }}
+                                            {% else %}
+                                                {{ currency_format(service.start_price) }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success btn-block btn-sm">Place</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Seller</h4>
+                    </div>
+                    <div class="panel-body">
+                        <a href="#" class="text-xl">{{ service.username }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

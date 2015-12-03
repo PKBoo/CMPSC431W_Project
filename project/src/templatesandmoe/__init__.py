@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, request, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -40,8 +41,14 @@ def close_db_session(exception):
 
 # jinja template helper functions
 
+# Returns a number as a USD currency
 def currency_format(decimal):
     return '${:,.2f}'.format(decimal)
+
+
+# Return a datetime in 12 hour time
+def time_format(time):
+    return time.strftime('%m-%d-%Y %I:%M %p')
 
 
 def url_for_other_page(page):
@@ -63,3 +70,4 @@ def template_preview_url(item_id):
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['currency_format'] = currency_format
 app.jinja_env.globals['template_preview_url'] = template_preview_url
+app.jinja_env.globals['time_format'] = time_format

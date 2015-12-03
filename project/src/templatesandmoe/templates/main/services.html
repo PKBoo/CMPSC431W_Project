@@ -1,0 +1,72 @@
+{% extends "layout/main.html" %}
+
+{% macro render_pagination(pagination) %}
+  <ul class=pagination>
+      {% if pagination.has_prev %}
+        <li>
+            <a href="{{ url_for_other_page(pagination.page - 1) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+      {% endif %}
+      {% for page in pagination.iter_pages() %}
+          {% if page %}
+            {% if page != pagination.page %}
+                <li><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+            {% else %}
+                <li class="active"><a><strong>{{ page }}</strong></a></li>
+            {% endif %}
+          {% else %}
+                <span class=ellipsis>…</span>
+          {% endif %}
+      {% endfor %}
+      {% if pagination.has_next %}
+          <li>
+            <a href="{{ url_for_other_page(pagination.page + 1) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+      {% endif %}
+  </ul>
+{% endmacro %}
+
+{% block title %}- Services{% endblock %}
+{% block body %}
+    <div class="main container">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-9">
+            <table class="table table-striped">
+                <thead>
+                    <td><strong>Service</strong></td>
+                    <td><strong>Bids</strong></td>
+                    <td><strong>Ends</strong></td>
+                </thead>
+                <tbody>
+                    {% for auction in auctions %}
+                        <tr>
+                            <td><a href="{{ url_for('main.single_service', item_id=auction.item_id) }}">{{ auction.name }}</a></td>
+                            <td>
+                                {% if auction.highest_bid is not none %}
+                                    {{ currency_format(auction.highest_bid) }}
+                                {% else %}
+                                    {{ currency_format(auction.start_price) }}
+                                {% endif %}
+                                ({{ auction.bids }} bids)
+                            </td>
+                            <td>
+                                {{ time_format(auction.end_date) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                {{ render_pagination(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

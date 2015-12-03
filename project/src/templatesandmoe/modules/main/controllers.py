@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, request, render_template, redirect, session
+from flask import Blueprint, request, render_template, redirect, session, flash
 from config import TEMPLATES_DATA_PATH
 from templatesandmoe.modules.core.pagination import Pagination
 from templatesandmoe import db_session, hashids
@@ -10,12 +10,14 @@ from templatesandmoe.modules.orders.service import OrdersService
 from templatesandmoe.modules.orders.models import CardPayment
 from templatesandmoe.modules.categories.service import CategoriesService
 from templatesandmoe.modules.ratings.service import RatingsService
+from templatesandmoe.modules.auctions.service import AuctionsService
 
 mainModule = Blueprint('main', __name__)
 items = ItemsService(database=db_session)
 orders = OrdersService(database=db_session)
 categories = CategoriesService(database=db_session)
 ratings = RatingsService(database=db_session)
+auctions = AuctionsService(database=db_session)
 
 @mainModule.route('/', methods=['GET'])
 def home():
@@ -161,8 +163,64 @@ def sell():
                 print(e)
                 return 'Something terrible happened.'
 
-
         else:
             return render_template('main/sell.html', template_form=template_form)
+    else:
+        return redirect('/login')
+
+
+@mainModule.route('/services/', defaults={'page': 1})
+@mainModule.route('/services/page/<int:page>')
+def services(page):
+    auctions, count = items.get_filtered_services(page, services_per_page=15)
+    pagination = Pagination(page, 15, count)
+    return render_template('main/services.html',
+                           auctions=auctions,
+                           pagination=pagination)
+
+
+@mainModule.route('/services/<int:item_id>')
+def single_service(item_id):
+    service = items.get_service_by_id(item_id)
+    bids = auctions.get_bids_for_service(service.service_id)
+    return render_template('main/service.html',
+                           service=service,
+                           bids=bids)
+
+
+@mainModule.route('/services/<int:item_id>/bids', methods=['POST'])
+def place_bid(item_id):
+    user_id = session.get('user_id')
+    amount = request.form.get('amount')
+
+    # Make sure bid amount is a valid currency amount
+    try:
+        amount = float("{0:.2f}".format(float(amount)))
+    except:
+        flash('Bid must be a valid amount.', category='bid')
+        return redirect(request.referrer)
+
+    if user_id:
+        service = items.get_service_by_id(item_id)
+        highest_bid = auctions.get_highest_bid(service.service_id)
+        bid_check_amount = highest_bid.amount
+        if highest_bid is None:
+            bid_check_amount = service.start_price
+
+        # Don't allow bidding if current user is the owner of the service
+        # or if the current user is currently the highest bidder (only if bids exist)
+        if service.user_id != user_id and (highest_bid is None or highest_bid.user_id != user_id):
+
+            # if there is a highest bid, make sure the bid amount is greater than it
+            if amount > bid_check_amount:
+                auctions.place_bid(service.service_id, user_id, amount)
+                flash('Successfully placed bid', category='bid_placed')
+                return redirect(request.referrer)
+            else:
+                flash('Bid amount must be greater than highest bid.', category='bid')
+                return redirect(request.referrer)
+        else:
+            flash('You already have the highest bid.', category='bid')
+            return redirect(request.referrer)
     else:
         return redirect('/login')

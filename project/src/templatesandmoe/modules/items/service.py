@@ -113,7 +113,7 @@ class ItemsService:
             'ORDER BY rating DESC '
             'LIMIT ' + limit + ' OFFSET ' + offset
         )
-        print(query)
+
         templates = self.database.execute(text(query), params).fetchall()
 
         return [templates, int(count)]
@@ -130,26 +130,6 @@ class ItemsService:
 
         return templates
 
-    def get_all_services(self):
-        services = self.database.execute(
-            'SELECT S.service_id, I.item_id, S.end_date, I.name, I.price, I.created_at, U.username '
-            'FROM Services S '
-            'JOIN Items I ON I.item_id = S.item_id '
-            'JOIN Users U ON U.user_id = I.user_id '
-        )
-
-        return services
-
-    def get_services_by_user_id(self, user_id):
-        services = self.database.execute(text(
-            'SELECT S.service_id, I.item_id, S.end_date, I.name, I.price, I.created_at '
-            'FROM Services S '
-            'JOIN Items I ON I.item_id = S.item_id '
-            'WHERE I.user_id = :user_id'
-        ), {'user_id': user_id})
-
-        return services
-
     def get_latest_templates(self, limit):
         templates = self.database.execute(text(
             'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
@@ -159,7 +139,7 @@ class ItemsService:
             'JOIN Users U ON U.user_id = I.user_id '
             'ORDER BY created_at DESC '
             'LIMIT :limit'
-        ), { 'limit': limit})
+        ), {'limit': limit})
 
         return templates
 
@@ -185,5 +165,78 @@ class ItemsService:
 
             return item_id
         except:
-            self.database.rollback
+            self.database.rollback()
             raise
+
+    def get_all_services(self):
+        services = self.database.execute(
+            'SELECT S.service_id, I.item_id, S.end_date, I.name, I.price, I.created_at, U.username '
+            'FROM Services S '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+        )
+
+        return services
+
+    def get_services_by_user_id(self, user_id):
+        services = self.database.execute(text(
+            'SELECT S.service_id, I.item_id, S.end_date, I.name, I.price, I.created_at '
+            'FROM Services S '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'WHERE I.user_id = :user_id'
+        ), {'user_id': user_id})
+
+        return services
+
+    def get_service_by_id(self, item_id):
+        query = (
+            'SELECT S.service_id, S.end_date, I.item_id, I.name, I.price as start_price, I.created_at, '
+            'I.description, U.user_id, U.username, '
+            '(SELECT MAX(B.amount) FROM Bids B WHERE B.service_id = S.service_id) AS highest_bid, '
+            '(SELECT COUNT(*) FROM Bids B Where B.service_id = S.service_id) AS bids '
+            'FROM Services S '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+            'WHERE I.item_id = :item_id'
+        )
+
+        service = self.database.execute(text(query), {'item_id': item_id}).fetchone()
+
+        return service
+
+    def get_filtered_services(self, page=1, services_per_page=16):
+        query = (
+            'SELECT S.service_id, S.end_date, I.item_id, I.name, I.price as start_price, I.created_at, '
+            'U.user_id, U.username, '
+            '(SELECT MAX(B.amount) FROM Bids B WHERE B.service_id = S.service_id) AS highest_bid, '
+            '(SELECT COUNT(*) FROM Bids B Where B.service_id = S.service_id) AS bids '
+            'FROM Services S '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+            'WHERE NOW() < S.end_date '
+        )
+        count_query = (
+            'SELECT COUNT(S.service_id)'
+            'FROM Services S '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'JOIN Users U ON U.user_id = I.user_id '
+            'WHERE S.ended = 0 '
+        )
+
+        params = {}
+        where_clauses = []
+
+        count = self.database.execute(text(count_query)).scalar()
+
+        page -= 1
+        limit = str((page * services_per_page) + services_per_page)
+        offset = str(page * services_per_page)
+
+        query += (
+            'LIMIT ' + limit + ' OFFSET ' + offset
+        )
+
+        services = self.database.execute(text(query)).fetchall()
+        print(count)
+        print(query)
+        return [services, int(count)]
