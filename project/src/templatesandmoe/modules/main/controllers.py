@@ -127,23 +127,6 @@ def update_rating(item_id):
         return redirect('/login')
 
 
-@mainModule.route('/sell', methods=['GET', 'POST'])
-def sell():
-    if session.get('user_id'):
-        template_form = AddTemplateForm()
-        service_form = AddServiceForm()
-
-        all_categories = categories.get_all()
-        categories_select_datasource = []
-        for cat in all_categories:
-            categories_select_datasource.append((cat.category_id, cat.name))
-        template_form.category.choices = categories_select_datasource
-
-        return render_template('main/sell.html', template_form=template_form, service_form=service_form)
-    else:
-        return redirect('/login')
-
-
 @mainModule.route('/sell/template', methods=['GET', 'POST'])
 def sell_template():
     if session.get('user_id'):
