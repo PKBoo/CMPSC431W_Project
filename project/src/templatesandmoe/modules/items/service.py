@@ -220,7 +220,7 @@ class ItemsService:
             'FROM Services S '
             'JOIN Items I ON I.item_id = S.item_id '
             'JOIN Users U ON U.user_id = I.user_id '
-            'WHERE S.ended = 0 '
+            'WHERE NOW() < S.end_date '
         )
 
         params = {}
