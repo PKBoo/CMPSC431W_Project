@@ -52,6 +52,11 @@ body {
     font-size: 24px;
 }
 
+.v-spacer {
+margin-top: 10px;
+margin-bottom: 10px;
+}
+
 .horizontal-list li {
     float: left;
     margin: 0 10px 0 0;

@@ -102,10 +102,15 @@ class ItemsService:
 
         query = (
             'SELECT T.template_id, I.item_id, T.file_path, I.category_id, I.name, I.price, I.created_at, '
-            'C.name AS category_name, U.username '
+            'C.name AS category_name, U.username, '
+            # Want to calculate average rating for each template
+            '(SELECT AVG(R.amount) '
+            'FROM Ratings R '
+            'WHERE R.template_id = T.template_id) as rating '
         ) + query
 
         query += (
+            'ORDER BY rating DESC '
             'LIMIT ' + limit + ' OFFSET ' + offset
         )
         print(query)
