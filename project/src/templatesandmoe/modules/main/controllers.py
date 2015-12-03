@@ -219,9 +219,11 @@ def place_bid(item_id):
 
         service = items.get_service_by_id(item_id)
         highest_bid = auctions.get_highest_bid(service.service_id)
-        bid_check_amount = highest_bid.amount
         if highest_bid is None:
             bid_check_amount = service.start_price
+        else:
+            bid_check_amount = highest_bid.amount
+
 
         # Make sure bid amount is a valid currency amount
         try:
