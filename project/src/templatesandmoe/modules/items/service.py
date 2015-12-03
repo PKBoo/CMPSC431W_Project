@@ -108,7 +108,7 @@ class ItemsService:
         query += (
             'LIMIT ' + limit + ' OFFSET ' + offset
         )
-
+        print(query)
         templates = self.database.execute(text(query), params).fetchall()
 
         return [templates, int(count)]

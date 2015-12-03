@@ -74,7 +74,7 @@
                         </div>
 
                         {% if session.get('user_id') %}
-                            <form action="{{ url_for('main.update_rating', item_id=template.item_id) }}" method="POST" class="form-inline">
+                            <form action="{{ url_for('main.update_rating', item_id=template.template_id) }}" method="POST" class="form-inline">
                                 <div class="input-group">
                                     <select class="form-control input-sm" id="rating" name="rating">
                                         <option value="0" {% if user_rating == 0 %} selected {% endif %}>0</option>
