@@ -62,7 +62,7 @@
                             {% endif %}
                             {% endwith %}
 
-                            <form action="{{ url_for('main.place_bid', item_id=service.item_id) }}" method="POST">
+                            <form action="{{ url_for('items.place_bid', item_id=service.item_id) }}" method="POST">
                                 <div class="row">
                                     <div class="col-md-8">
                                         <input type="text" class="form-control input-sm" name="amount" />

@@ -46,7 +46,7 @@
                 <tbody>
                     {% for auction in auctions %}
                         <tr>
-                            <td><a href="{{ url_for('main.single_service', item_id=auction.item_id) }}">{{ auction.name }}</a></td>
+                            <td><a href="{{ url_for('items.single_service', item_id=auction.item_id) }}">{{ auction.name }}</a></td>
                             <td>
                                 {% if auction.highest_bid is not none %}
                                     {{ currency_format(auction.highest_bid) }}
