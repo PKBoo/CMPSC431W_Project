@@ -7,14 +7,14 @@
        <div class="row">
             <div class="col-md-12">
                 <ol class="breadcrumb">
-                    <li><a href="{{ url_for('main.all_templates', category=0, page=1) }}">All</a></li>
+                    <li><a href="{{ url_for('items.all_templates', category=0, page=1) }}">All</a></li>
                     {% if breadcrumb.up2_name %}
-                        <li><a href="{{ url_for('main.all_templates', category=breadcrumb.up2_id, page=1) }}">{{ breadcrumb.up2_name }}</a></li>
+                        <li><a href="{{ url_for('items.all_templates', category=breadcrumb.up2_id, page=1) }}">{{ breadcrumb.up2_name }}</a></li>
                     {% endif %}
                     {% if breadcrumb.up1_name %}
-                        <li><a href="{{ url_for('main.all_templates', category=breadcrumb.up1_id, page=1) }}">{{ breadcrumb.up1_name }}</a></li>
+                        <li><a href="{{ url_for('items.all_templates', category=breadcrumb.up1_id, page=1) }}">{{ breadcrumb.up1_name }}</a></li>
                     {% endif %}
-                    <li><a href="{{ url_for('main.all_templates', category=breadcrumb.root_id, page=1) }}">{{ breadcrumb.root_name }}</a></li>
+                    <li><a href="{{ url_for('items.all_templates', category=breadcrumb.root_id, page=1) }}">{{ breadcrumb.root_name }}</a></li>
                 </ol>
             </div>
         </div>
@@ -74,7 +74,7 @@
                         </div>
 
                         {% if session.get('user_id') %}
-                            <form action="{{ url_for('main.update_rating', item_id=template.template_id) }}" method="POST" class="form-inline">
+                            <form action="{{ url_for('items.update_rating', item_id=template.template_id) }}" method="POST" class="form-inline">
                                 <div class="input-group">
                                     <select class="form-control input-sm" id="rating" name="rating">
                                         <option value="0" {% if user_rating == 0 %} selected {% endif %}>0</option>

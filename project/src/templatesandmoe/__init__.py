@@ -22,16 +22,18 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 hashids = Hashids(salt='NTebZ10PhLdDM8EG00c7u14YGQW8PA0l', min_length=8)
 
 # Import modules
-from templatesandmoe.modules.main.controllers import mainModule as mainModule
-from templatesandmoe.modules.auth.controllers import authModule as authModule
-from templatesandmoe.modules.admin.controllers import adminModule as adminModule
-from templatesandmoe.modules.api.controllers import apiModule as apiModule
+from templatesandmoe.modules.main.controllers import mainModule as MainModule
+from templatesandmoe.modules.items.controllers import itemsModule as ItemsModule
+from templatesandmoe.modules.auth.controllers import authModule as AuthModule
+from templatesandmoe.modules.admin.controllers import adminModule as AdminModule
+from templatesandmoe.modules.api.controllers import apiModule as ApiModule
 
 # Register modules
-app.register_blueprint(mainModule)
-app.register_blueprint(authModule)
-app.register_blueprint(adminModule)
-app.register_blueprint(apiModule)
+app.register_blueprint(MainModule)
+app.register_blueprint(ItemsModule)
+app.register_blueprint(AuthModule)
+app.register_blueprint(AdminModule)
+app.register_blueprint(ApiModule)
 
 
 @app.teardown_request
