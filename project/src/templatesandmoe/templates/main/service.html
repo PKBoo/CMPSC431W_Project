@@ -5,6 +5,13 @@
         <div class="page-header">
             <h2>{{ service.name }}</h2>
         </div>
+
+        {% if has_ended %}
+        <div class="alert alert-warning">
+            This auction has ended already.
+        </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-md-8">
                 {% if service.description is not none %}
@@ -43,7 +50,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                {% if session.get('user_id') != service.user_id %}
+                {% if session.get('user_id') != service.user_id and not has_ended %}
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4>Place Bid</h4>

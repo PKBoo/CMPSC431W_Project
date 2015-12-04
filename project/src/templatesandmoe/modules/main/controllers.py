@@ -1,7 +1,6 @@
 import os
 from flask import Blueprint, request, render_template, redirect, session, flash
 from config import TEMPLATES_DATA_PATH
-from templatesandmoe.modules.core.pagination import Pagination
 from templatesandmoe import db_session, hashids
 from templatesandmoe.modules.items.service import ItemsService
 from templatesandmoe.modules.items.forms import AddTemplateForm, AddServiceForm

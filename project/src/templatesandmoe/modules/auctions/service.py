@@ -47,3 +47,6 @@ class AuctionsService:
         except:
             self.database.rollback()
             raise
+
+    def ended(self, service):
+        return datetime.now() >= service.end_date
