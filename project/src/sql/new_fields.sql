@@ -10,3 +10,11 @@ ALTER TABLE Transactions ADD (
 ALTER TABLE Items ADD (
     description varchar(5000) NULL
 );
+
+ALTER TABLE Bids ADD (
+    winning int DEFAULT 0
+);
+
+ALTER TABLE Services ADD (
+    ended int DEFAULT 0
+);

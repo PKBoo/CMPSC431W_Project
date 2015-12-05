@@ -1,11 +1,13 @@
 import os
 from datetime import datetime
+from threading import Thread
 from flask import Flask, request, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker
 from hashids import Hashids
+from templatesandmoe.modules.auctions.manager import AuctionsManager
 
 app = Flask(__name__)
 
@@ -20,6 +22,8 @@ db_session = scoped_session(sessionmaker(autocommit=False,
                                          bind=db.engine))
 
 hashids = Hashids(salt='NTebZ10PhLdDM8EG00c7u14YGQW8PA0l', min_length=8)
+
+auctions_manager = AuctionsManager(database=db_session)
 
 # Import modules
 from templatesandmoe.modules.main.controllers import mainModule as MainModule
@@ -40,6 +44,12 @@ app.register_blueprint(ApiModule)
 def close_db_session(exception):
     db_session.close()
 
+
+@app.before_first_request
+def start_auction_manager():
+    # Have to start auction manager after first connection is made for auto reload workaround
+    t = Thread(target=auctions_manager.start)
+    t.start()
 
 # jinja template helper functions
 

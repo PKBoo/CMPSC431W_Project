@@ -50,3 +50,14 @@ class AuctionsService:
 
     def ended(self, service):
         return datetime.now() >= service.end_date
+
+    def mark_bid_as_won(self, bid_id):
+        try:
+            self.database.execute(text(
+                'UPDATE Bids SET winning = 1 WHERE bid_id = :bid_id'
+            ), {'bid_id': bid_id})
+
+            self.database.commit()
+        except:
+            self.database.rollback()
+            raise

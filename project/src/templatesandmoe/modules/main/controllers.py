@@ -113,7 +113,7 @@ def sell_service():
                                             service_form.name.data,
                                             service_form.start_price.data,
                                             service_form.description.data,
-                                            service_form.end_date.data)
+                                            service_form.duration.data)
 
                 return redirect('/services/' + str(item_id))
             except Exception as e:

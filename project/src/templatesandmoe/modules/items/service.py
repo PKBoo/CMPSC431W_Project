@@ -213,20 +213,23 @@ class ItemsService:
             'FROM Services S '
             'JOIN Items I ON I.item_id = S.item_id '
             'JOIN Users U ON U.user_id = I.user_id '
-            'WHERE NOW() < S.end_date '
+            'WHERE :current_datetime < S.end_date '
+            'ORDER BY S.end_date ASC '
         )
         count_query = (
             'SELECT COUNT(S.service_id)'
             'FROM Services S '
             'JOIN Items I ON I.item_id = S.item_id '
             'JOIN Users U ON U.user_id = I.user_id '
-            'WHERE NOW() < S.end_date '
+            'WHERE :current_datetime < S.end_date '
         )
 
-        params = {}
+        params = {
+            'current_datetime': datetime.datetime.now().isoformat()
+        }
         where_clauses = []
-
-        count = self.database.execute(text(count_query)).scalar()
+        print(datetime.datetime.now().isoformat())
+        count = self.database.execute(text(count_query), params).scalar()
 
         page -= 1
         limit = str((page * services_per_page) + services_per_page)
@@ -236,12 +239,25 @@ class ItemsService:
             'LIMIT ' + limit + ' OFFSET ' + offset
         )
 
-        services = self.database.execute(text(query)).fetchall()
+        services = self.database.execute(text(query), params).fetchall()
+
         print(count)
         print(query)
         return [services, int(count)]
 
-    def add_service(self, user_id, name, start_price, description, end_date):
+    def get_pending_services(self):
+        query = (
+            'SELECT S.service_id, '
+            '(SELECT bid_id FROM Bids WHERE service_id = S.service_id ORDER BY amount DESC LIMIT 1) as winning_bid_id '
+            'FROM Services S '
+            'WHERE :current_datetime >= S.end_date AND S.ended = 0'
+        )
+
+        services = self.database.execute(text(query), {'current_datetime': datetime.datetime.now().isoformat()}).fetchall()
+
+        return services
+
+    def add_service(self, user_id, name, start_price, description, duration):
         try:
             item = insert(self.database, 'Items', [
                 ('user_id', user_id),
@@ -252,15 +268,27 @@ class ItemsService:
             ])
 
             item_id = item.lastrowid
+            end_date = datetime.datetime.now() + datetime.timedelta(days=duration)
 
             service = insert(self.database, 'Services', [
                 ('item_id', item_id),
-                ('end_date', end_date)
+                ('end_date', end_date.isoformat())
             ])
 
             self.database.commit()
 
             return item_id
+        except:
+            self.database.rollback()
+            raise
+
+    def mark_service_ended(self, service_id):
+        try:
+            query = (
+                'UPDATE Services SET ended = 1 WHERE service_id = :service_id'
+            )
+            self.database.execute(text(query), {'service_id': service_id})
+            self.database.commit()
         except:
             self.database.rollback()
             raise

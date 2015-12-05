@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms.fields import StringField, DateTimeField, SelectField, TextAreaField, FileField, HiddenField
+from wtforms.fields import StringField, DateTimeField, SelectField, TextAreaField, FileField, IntegerField
 from wtforms.validators import DataRequired, ValidationError
 from werkzeug.utils import secure_filename
 
@@ -36,6 +36,12 @@ def validate_price(self, field):
     except:
         raise ValidationError('Price must be a number.')
 
+def duration_choices():
+    choices = []
+    for i in range(1, 8):
+        choices.append((i, str(i) + ' days'))
+    return choices
+
 class AddTemplateForm(Form):
     name = StringField('Name', validators=[DataRequired(message='Name is required.')])
     price = StringField('Price', validators=[DataRequired(message='Price is required.'), validate_price])
@@ -48,4 +54,5 @@ class AddServiceForm(Form):
     name = StringField('Name', validators=[DataRequired(message='Name is required.')])
     start_price = StringField('Start Price', validators=[DataRequired(message='Start price is required.'), validate_price])
     description = TextAreaField('Description', validators=[DataRequired(message='Description is required.')])
-    end_date = DateTimeField('End date', format='%m/%d/%Y %H:%M %p', validators=[DataRequired(message='End date is required.')])
+    #end_date = DateTimeField('End date', format='%m/%d/%Y %I:%M %p', validators=[DataRequired(message='End date is required.')])
+    duration = SelectField('Duration', choices=duration_choices(), coerce=int, validators=[DataRequired(message='Duration required')])
