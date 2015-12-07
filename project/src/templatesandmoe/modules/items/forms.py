@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
-from wtforms.fields import StringField, DateTimeField, SelectField, TextAreaField, FileField, IntegerField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.fields import StringField, HiddenField, SelectField, FloatField, TextAreaField, FileField, IntegerField
+from wtforms.validators import DataRequired, ValidationError, NumberRange
 from werkzeug.utils import secure_filename
 
 
@@ -44,11 +44,13 @@ def duration_choices():
 
 class AddTemplateForm(Form):
     name = StringField('Name', validators=[DataRequired(message='Name is required.')])
-    price = StringField('Price', validators=[DataRequired(message='Price is required.'), validate_price])
+    price = FloatField('Price', validators=[NumberRange(min=1, message='Price must be greater than 0.'), DataRequired(message='Price is required.'), validate_price])
     category = SelectField('Category', coerce=int, validators=[DataRequired(message='Category is required.')])
     description = TextAreaField('Description')
     preview = FileField('Image Preview', validators=[validate_preview])
     files = FileField('Files (Zip)', validators=[DataRequired(message='Files are required.'), validate_files])
+    tags = HiddenField()
+    custom_tags = HiddenField()
 
 class AddServiceForm(Form):
     name = StringField('Name', validators=[DataRequired(message='Name is required.')])

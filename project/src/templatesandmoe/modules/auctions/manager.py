@@ -31,7 +31,7 @@ class AuctionsManager:
 
 
     def start(self):
-        schedule.every(5).seconds.do(self.watch_auctions)
+        schedule.every(1).minutes.do(self.watch_auctions)
         while True:
             schedule.run_pending()
             time.sleep(1)

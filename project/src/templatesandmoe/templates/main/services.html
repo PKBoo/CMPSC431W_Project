@@ -36,10 +36,11 @@
         <div class="col-md-3">
 
         </div>
-        <div class="col-md-9">
+        <div class="col-md-12">
             <table class="table table-striped">
                 <thead>
                     <td><strong>Service</strong></td>
+                    <td><strong>Seller</strong></td>
                     <td><strong>Bids</strong></td>
                     <td><strong>Ends</strong></td>
                 </thead>
@@ -47,6 +48,7 @@
                     {% for auction in auctions %}
                         <tr>
                             <td><a href="{{ url_for('items.single_service', item_id=auction.item_id) }}">{{ auction.name }}</a></td>
+                            <td>{{ auction.username }}</td>
                             <td>
                                 {% if auction.highest_bid is not none %}
                                     {{ currency_format(auction.highest_bid) }}

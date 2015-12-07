@@ -228,7 +228,7 @@ class ItemsService:
             'current_datetime': datetime.datetime.now().isoformat()
         }
         where_clauses = []
-        print(datetime.datetime.now().isoformat())
+
         count = self.database.execute(text(count_query), params).scalar()
 
         page -= 1
@@ -241,8 +241,6 @@ class ItemsService:
 
         services = self.database.execute(text(query), params).fetchall()
 
-        print(count)
-        print(query)
         return [services, int(count)]
 
     def get_pending_services(self):

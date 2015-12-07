@@ -132,7 +132,7 @@
 
                                             <span class="label label-info">
                                                 {% if template.rating is not none %}
-                                                    Rating: {{ template.rating }} / 5
+                                                    Rating: {{ format_rating(template.rating) }} / 5
                                                 {% else %}
                                                     No ratings
                                                 {% endif %}

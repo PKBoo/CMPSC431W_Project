@@ -9,12 +9,14 @@ from templatesandmoe.modules.orders.service import OrdersService
 from templatesandmoe.modules.orders.models import CardPayment
 from templatesandmoe.modules.categories.service import CategoriesService
 from templatesandmoe.modules.auctions.service import AuctionsService
+from templatesandmoe.modules.tags.service import TagsService
 
 mainModule = Blueprint('main', __name__)
 items = ItemsService(database=db_session)
 orders = OrdersService(database=db_session)
 categories = CategoriesService(database=db_session)
 auctions = AuctionsService(database=db_session)
+tags = TagsService(database=db_session)
 
 @mainModule.route('/', methods=['GET'])
 def home():
@@ -70,6 +72,8 @@ def sell_template():
             categories_select_datasource.append((cat.category_id, cat.name))
         template_form.category.choices = categories_select_datasource
 
+        all_tags = tags.get_all()
+
         if template_form.validate_on_submit():
             # Insert the template into the database, then create a folder for it in templates_data
             try:
@@ -96,7 +100,7 @@ def sell_template():
                 print(e)
                 return 'Something terrible happened.'
         else:
-            return render_template('main/sell_template.html', template_form=template_form)
+            return render_template('main/sell_template.html', template_form=template_form, all_tags=all_tags)
     else:
         return redirect('/login')
 

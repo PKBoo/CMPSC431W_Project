@@ -58,6 +58,10 @@ def currency_format(decimal):
     return '${:,.2f}'.format(decimal)
 
 
+def format_rating(decimal):
+    return '{:.1f}'.format(decimal)
+
+
 # Return a datetime in 12 hour time
 def time_format(time):
     return time.strftime('%m-%d-%Y %I:%M %p')
@@ -83,3 +87,4 @@ app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['currency_format'] = currency_format
 app.jinja_env.globals['template_preview_url'] = template_preview_url
 app.jinja_env.globals['time_format'] = time_format
+app.jinja_env.globals['format_rating'] = format_rating

@@ -76,7 +76,7 @@ def update_rating(item_id):
         rating = request.form.get('rating')
         user_rating = ratings.get_rating_for_template_by_user(item_id, session.get('user_id'))
 
-        if user_rating:
+        if user_rating is not None:
             ratings.update_rating(item_id, session.get('user_id'), rating)
         else:
             ratings.add_rating(item_id, session.get('user_id'), rating)
