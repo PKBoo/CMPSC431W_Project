@@ -54,7 +54,7 @@ class AddTemplateForm(Form):
 
 class AddServiceForm(Form):
     name = StringField('Name', validators=[DataRequired(message='Name is required.')])
-    start_price = StringField('Start Price', validators=[DataRequired(message='Start price is required.'), validate_price])
+    start_price = FloatField('Start Price', validators=[DataRequired(message='Start price is required.'), validate_price])
     description = TextAreaField('Description', validators=[DataRequired(message='Description is required.')])
     #end_date = DateTimeField('End date', format='%m/%d/%Y %I:%M %p', validators=[DataRequired(message='End date is required.')])
     duration = SelectField('Duration', choices=duration_choices(), coerce=int, validators=[DataRequired(message='Duration required')])
