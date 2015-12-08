@@ -5,11 +5,13 @@ from templatesandmoe.modules.items.models import Item
 from templatesandmoe.modules.users.models import User
 from templatesandmoe.modules.users.service import UsersService
 from templatesandmoe.modules.items.service import ItemsService
+from templatesandmoe.modules.reporting.service import ReportingService
 from templatesandmoe.modules.admin.forms.user import UserForm
 
 adminModule = Blueprint('admin', __name__, url_prefix='/admin')
 users_service = UsersService(database=db_session)
 items_service = ItemsService(database=db_session)
+reporting_service = ReportingService(database=db_session)
 
 
 @adminModule.before_request
@@ -98,3 +100,16 @@ def items():
     _services = items_service.get_all_services()
 
     return render_template('admin/items.html', templates=_templates, services=_services)
+
+@adminModule.route('/reports')
+def reports():
+    total_revenue = reporting_service.total_revenue()
+    total_transactions = reporting_service.total_transactions()
+    total_won_bids = reporting_service.total_won_bids()
+    all_items_sales_report = reporting_service.items_sales_report()
+
+    return render_template('admin/reports.html',
+                           all_items_sales_report=all_items_sales_report,
+                           total_revenue=total_revenue,
+                           total_transactions=total_transactions,
+                           total_won_bids=total_won_bids)

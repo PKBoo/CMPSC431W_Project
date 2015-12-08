@@ -26,6 +26,9 @@
                                 {{ session.username }} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right">
+                                    {% if session.get('permission') > 0 %}
+                                        <li><a href="/admin">Dashboard</a></li>
+                                    {% endif %}
                                     <li><a href="/account">Account</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="/logout">Log out</a></li>

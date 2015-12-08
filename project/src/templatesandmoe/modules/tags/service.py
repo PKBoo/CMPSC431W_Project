@@ -29,7 +29,7 @@ class TagsService:
         ), {'item_id': item_id}).fetchall()
 
         return tags
-    
+
     def create_custom_tags_for_item(self, tags, item_id):
         for tag in tags:
             try:
