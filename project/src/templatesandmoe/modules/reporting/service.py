@@ -28,18 +28,47 @@ class ReportingService:
 
         return total
 
-    def items_sales_report(self, item_id=None):
+    def items_sales_report(self, period='All', item_id=None):
         query = ('SELECT I.item_id, I.name, U.username, COUNT(TI.item_id) as sales, SUM(I.price) as revenue '
-                'FROM Templates T '
-                'JOIN Items I ON I.item_id = T.item_id '
-                'JOIN Users U ON U.user_id = I.user_id '
-                'JOIN Transaction_Items TI ON TI.item_id = I.item_id '
-                'GROUP BY I.item_id ')
+                 'FROM Templates T '
+                 'JOIN Items I ON I.item_id = T.item_id '
+                 'JOIN Users U ON U.user_id = I.user_id '
+                 'JOIN Transaction_Items TI ON TI.item_id = I.item_id '
+                 'JOIN Transactions TR ON TI.transaction_id = TR.transaction_id '
+                 )
         params = {}
 
         if item_id is not None:
             query += 'HAVING I.item_id = :item_id'
             params['item_id'] = item_id
+
+        # Want to get the entirety of today
+        time = datetime.time(0, 0)
+        date = datetime.datetime.now().date()
+        today = datetime.datetime.combine(date, time) + datetime.timedelta(seconds=59, minutes=59, hours=23)
+
+        if period == 'today':
+            start_date = datetime.datetime.combine(date, time)
+            end_date = today
+        elif period == 'week':
+            end_date = today
+            start_date = today - datetime.timedelta(weeks=1)
+        elif period == 'month':
+            end_date = today
+            start_date = today - datetime.timedelta(weeks=4)
+        elif period == 'year':
+            end_date = today
+            start_date = today - datetime.timedelta(weeks=52)
+        else:
+            start_date = None
+            end_date = None
+
+        if start_date and end_date:
+            query += 'WHERE TR.created_at >= :start_date AND TR.created_at < :end_date '
+            params['start_date'] = start_date.isoformat()
+            params['end_date'] = end_date.isoformat()
+
+        query += 'GROUP BY I.item_id'
 
         items = self.database.execute(text(query), params).fetchall()
 

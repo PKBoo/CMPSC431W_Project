@@ -176,7 +176,7 @@ margin-bottom: 10px;
     width: 97%;
 }
 .table-fixed tbody {
-    height: 230px;
+    height: 400px;
     overflow-y: auto;
     width: 100%;
 }

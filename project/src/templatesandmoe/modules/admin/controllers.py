@@ -1,5 +1,5 @@
 import bcrypt
-from flask import Blueprint, flash, render_template, redirect, session
+from flask import Blueprint, flash, render_template, redirect, request, session
 from templatesandmoe import db_session
 from templatesandmoe.modules.items.models import Item
 from templatesandmoe.modules.users.models import User
@@ -103,12 +103,14 @@ def items():
 
 @adminModule.route('/reports')
 def reports():
+    period = request.args.get('period')
     total_revenue = reporting_service.total_revenue()
     total_transactions = reporting_service.total_transactions()
     total_won_bids = reporting_service.total_won_bids()
-    all_items_sales_report = reporting_service.items_sales_report()
+    all_items_sales_report = reporting_service.items_sales_report(period=period)
 
     return render_template('admin/reports.html',
+                           period=period,
                            all_items_sales_report=all_items_sales_report,
                            total_revenue=total_revenue,
                            total_transactions=total_transactions,
