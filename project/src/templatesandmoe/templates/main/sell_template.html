@@ -32,7 +32,7 @@
                 <form action="{{ url_for('main.sell_template') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
                     {{ template_form.csrf_token }}
                     {{ template_form.tags(id='currentTags') }}
-                    {{ template_form.tags(id='customTags') }}
+                    {{ template_form.custom_tags(id='customTags') }}
                     <div class="form-group">
                         {{ template_form.name.label(class='col-sm-2 control-label') }}
                         <div class="col-sm-5">
@@ -75,7 +75,7 @@
 
                             <h5>Create New Tag</h5>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter tag name">
+                                <input type="text" class="form-control" id="newTag" placeholder="Enter tag name">
                                 <span class="input-group-btn">
                                     <button id="createTag" class="btn btn-primary btn-default" type="button">Create</button>
                                 </span>

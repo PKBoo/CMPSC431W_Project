@@ -5,12 +5,14 @@ from templatesandmoe.modules.items.service import ItemsService
 from templatesandmoe.modules.categories.service import CategoriesService
 from templatesandmoe.modules.ratings.service import RatingsService
 from templatesandmoe.modules.auctions.service import AuctionsService
+from templatesandmoe.modules.tags.service import TagsService
 
 itemsModule = Blueprint('items', __name__)
 items = ItemsService(database=db_session)
 categories = CategoriesService(database=db_session)
 ratings = RatingsService(database=db_session)
 auctions = AuctionsService(database=db_session)
+tags = TagsService(database=db_session)
 
 """
     Show all templates
@@ -53,6 +55,7 @@ def all_templates(category, page):
 def single_template(item_id):
     template = items.get_template_by_id(item_id)
     breadcrumb = categories.get_path_to_root(template.category_id)
+    item_tags = tags.get_tags_for_item(item_id)
     rating = ratings.get_average_by_template_id(template.template_id)
 
     # if the user is logged in, determine if they have already rated this template.
@@ -64,7 +67,8 @@ def single_template(item_id):
                            breadcrumb=breadcrumb,
                            template=template,
                            rating=rating,
-                           user_rating=user_rating)
+                           user_rating=user_rating,
+                           item_tags=item_tags)
 
 
 """

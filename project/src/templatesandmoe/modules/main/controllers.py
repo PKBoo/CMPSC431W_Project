@@ -75,6 +75,7 @@ def sell_template():
         all_tags = tags.get_all()
 
         if template_form.validate_on_submit():
+
             # Insert the template into the database, then create a folder for it in templates_data
             try:
                 item_id = items.add_template(
@@ -83,6 +84,9 @@ def sell_template():
                     template_form.price.data,
                     template_form.description.data,
                     template_form.category.data)
+
+                tags.create_custom_tags_for_item(template_form.custom_tags.data.split(','), item_id)
+                tags.add_tags_to_item(template_form.tags.data.split(','), item_id)
 
                 data_folder = TEMPLATES_DATA_PATH + '/' + str(item_id) + '/'
                 os.makedirs(data_folder)
