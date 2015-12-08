@@ -103,7 +103,7 @@
                         <h4>Seller</h4>
                     </div>
                     <div class="panel-body">
-                        <a href="#" class="text-xl">{{ template.username }}</a>
+                        <a href="{{url_for('main.user_profile',username=template.username)}}" class="text-xl">{{ template.username }}</a>
                     </div>
                 </div>
 

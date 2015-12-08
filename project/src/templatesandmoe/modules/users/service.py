@@ -11,8 +11,24 @@ class UsersService:
     def get_by_id(self, user_id):
         return self.database.query(User).filter(User.user_id == user_id).first()
 
+    def get_by_username(self, username):
+        user = self.database.execute(text(
+            'SELECT * FROM Users WHERE username = :username'
+                ), {
+                    'username': username
+        }).fetchone()
+        return user
+
     def get_all(self):
         return self.database.query(User).all()
+
+    def get_average_template_rating(self, user_id):
+        avg_rating = self.database.execute(text(
+            'SELECT amount FROM Ratings R '
+            'JOIN Templates T on T.template_id = R.template_id '
+            'JOIN Items I on T.item_id = I.item_id Where I.user_id = :user_id'
+            ), {'user_id': user_id}).scalar()
+        return avg_rating
 
     def exists(self, username):
         user = self.database.query(User).filter(User.username == username).first()

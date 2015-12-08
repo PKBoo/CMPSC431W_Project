@@ -10,6 +10,7 @@ from templatesandmoe.modules.orders.models import CardPayment
 from templatesandmoe.modules.categories.service import CategoriesService
 from templatesandmoe.modules.auctions.service import AuctionsService
 from templatesandmoe.modules.tags.service import TagsService
+from templatesandmoe.modules.users.service import UsersService
 
 mainModule = Blueprint('main', __name__)
 items = ItemsService(database=db_session)
@@ -17,6 +18,7 @@ orders = OrdersService(database=db_session)
 categories = CategoriesService(database=db_session)
 auctions = AuctionsService(database=db_session)
 tags = TagsService(database=db_session)
+users = UsersService(database=db_session)
 
 @mainModule.route('/', methods=['GET'])
 def home():
@@ -131,3 +133,18 @@ def sell_service():
             return render_template('main/sell_service.html', service_form=service_form)
     else:
         return redirect('/login')
+
+
+@mainModule.route('/user/<string:username>')
+def user_profile(username):
+    user=users.get_by_username(username)
+    if user is None:
+        return redirect('/')
+
+    user_id=user.user_id
+    user_templates=items.get_templates_by_user_id(user_id)
+    user_services=items.get_services_by_user_id(user_id)
+    user_avg_rating=users.get_average_template_rating(user_id)
+
+
+    return render_template('main/user.html', user=user, templates=user_templates, rating=user_avg_rating, services=user_services)
