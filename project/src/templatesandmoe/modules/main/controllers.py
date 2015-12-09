@@ -30,7 +30,7 @@ def home():
 def account():
     if session.get('user_id'):
         user_id = session.get('user_id')
-        users_bid_services = auctions.get_users_bid_services(user_id)
+        users_bid_services = auctions.get_services_user_bid_on(user_id)
 
         return render_template("main/account.html",
                                users_bid_services=users_bid_services)
