@@ -251,7 +251,9 @@ class ItemsService:
             'WHERE :current_datetime >= S.end_date AND S.ended = 0'
         )
 
-        services = self.database.execute(text(query), {'current_datetime': datetime.datetime.now().isoformat()}).fetchall()
+        services = self.database.execute(text(query), {
+            'current_datetime': datetime.datetime.now().isoformat()
+        }).fetchall()
 
         return services
 

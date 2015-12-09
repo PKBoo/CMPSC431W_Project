@@ -1,0 +1,54 @@
+{% extends "layout/main.html" %}
+
+{% block title %}- Account{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h3>Your Account</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4>Won Auctions</h4>
+                    </div>
+                    <div class="panel-body">
+                        fasdf
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Bidding</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td><strong>Service</strong></td>
+                                    <td><strong>End date</strong></td>
+                                    <td><strong>Your Bid</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in users_bid_services %}
+                                    <tr>
+                                        <td><a href="{{ url_for('items.single_service', item_id=service.item_id) }}">{{ service.name }}</a></td>
+                                        <td>{{ time_format(service.end_date) }}</td>
+                                        <td>{{ currency_format(service.amount) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

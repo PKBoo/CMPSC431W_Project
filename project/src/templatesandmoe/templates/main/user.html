@@ -18,62 +18,62 @@
                 </div>
             </div>
             <div class="col-md-9">
-     <ul id="item-type-tabs" class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#templates" aria-controls="templates" role="tab" data-toggle="tab">Templates</a></li>
-            <li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
-        </ul>
+                <ul id="item-type-tabs" class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#templates" aria-controls="templates" role="tab" data-toggle="tab">Templates</a></li>
+                    <li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
+                </ul>
 
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="templates">
-                <table class="table table-striped">
-                        {% for template in templates %}
-                        <div class="col-md-4">
-                            <div class="thumbnail">
-                                <a href="/templates/{{ template.item_id }}">
-                                    <img src="{{ template_preview_url(template.item_id) }}" />
-                                </a>
-                                <div class="caption">
-                                    <h5 class="ellipsis"><a href="/templates/{{ template.item_id }}">{{ template.name }}</a></h5>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="templates">
+                        <table class="table table-striped">
+                                {% for template in templates %}
+                                <div class="col-md-4">
+                                    <div class="thumbnail">
+                                        <a href="/templates/{{ template.item_id }}">
+                                            <img src="{{ template_preview_url(template.item_id) }}" />
+                                        </a>
+                                        <div class="caption">
+                                            <h5 class="ellipsis"><a href="/templates/{{ template.item_id }}">{{ template.name }}</a></h5>
 
-                                    <div class="row">
-                                        <div class="col-md-6 col-md-offset-2 text-right">
+                                            <div class="row">
+                                                <div class="col-md-6 col-md-offset-2 text-right">
+                                                </div>
+                                            </div>
+                                            <div class="v-spacer"></div>
+                                            <div class="row">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="v-spacer"></div>
-                                    <div class="row">
-                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </table>
-            </div>
-    
+                            {% endfor %}
+                        </table>
+                    </div>
 
-            <div role="tabpanel" class="tab-pane" id="services">
-                <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Service Name</th>
-                            <th>Created By</th>
-                            <th>Start date</th>
-                            <th>End date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for service in services %}
-                            <tr>
-                                <td><a href="{{ url_for('items.single_service', item_id=service.item_id) }}">{{ service.name }}</a></td>
-                                <td>{{ service.username }}</td>
-                                <td>{{ service.created_at }}</td>
-                                <td>{{ service.end_date }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+
+                    <div role="tabpanel" class="tab-pane" id="services">
+                        <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Service Name</th>
+                                    <th>Created By</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in services %}
+                                    <tr>
+                                        <td><a href="{{ url_for('items.single_service', item_id=service.item_id) }}">{{ service.name }}</a></td>
+                                        <td>{{ service.username }}</td>
+                                        <td>{{ service.created_at }}</td>
+                                        <td>{{ service.end_date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-            </div>
-        </div>
-
+    </div>
 {% endblock %}

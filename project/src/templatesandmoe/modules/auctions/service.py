@@ -61,3 +61,20 @@ class AuctionsService:
         except:
             self.database.rollback()
             raise
+
+    def get_users_bid_services(self, user_id):
+        """
+        Gets all services that haven't ended that a user has bid on
+        Returns: Array of services
+
+        """
+
+        services = self.database.execute(text(
+            'SELECT DISTINCT I.item_id, I.name, B.amount, S.end_date '
+            'FROM Bids B '
+            'JOIN Services S ON S.service_id = B.service_id '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'WHERE B.user_id = :user_id AND S.ended = 1 '
+        ), {'user_id':user_id})
+
+        return services

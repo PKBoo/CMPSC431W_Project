@@ -26,6 +26,18 @@ def home():
     return render_template("main/home.html", latest_templates=latest_templates)
 
 
+@mainModule.route('/account')
+def account():
+    if session.get('user_id'):
+        user_id = session.get('user_id')
+        users_bid_services = auctions.get_users_bid_services(user_id)
+
+        return render_template("main/account.html",
+                               users_bid_services=users_bid_services)
+    else:
+        return redirect('/login')
+
+
 @mainModule.route('/orders/<string:transaction_id>', methods=['GET'])
 def order_summary(transaction_id):
     decoded_id = hashids.decode(transaction_id)
