@@ -20,38 +20,44 @@
             </div>
 
             <div class="col-md-9">
-                {% for transaction_id, order in orders.items() %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>Order Number: </strong>
-                            <a href="{{ url_for('main.order_summary', transaction_id=hash_public_id(order['transaction_id'])) }}">
-                                {{ hash_public_id(order['transaction_id']) }}
-                            </a>
-                        </div>
-                        <div class="panel panel-body">
-                            <table class="table">
-                                <tbody>
-                                    {%  for item in order['items'] %}
+                {% if order|length > 0 %}
+                    {% for transaction_id, order in orders.items() %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>Order Number: </strong>
+                                <a href="{{ url_for('main.order_summary', transaction_id=hash_public_id(order['transaction_id'])) }}">
+                                    {{ hash_public_id(order['transaction_id']) }}
+                                </a>
+                            </div>
+                            <div class="panel panel-body">
+                                <table class="table">
+                                    <tbody>
+                                        {%  for item in order['items'] %}
+                                            <tr>
+                                                <td class="col-md-9">
+                                                    <a title="Download" class="text-success" href="{{ url_for('static', filename='templates_data/' + item.item_id|string + '/download_' + item.item_id|string + '.zip') }}">
+                                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                                    </a>
+                                                    <a href="{{ url_for('items.single_template', item_id=item.item_id) }}">{{ item.name }}</a>
+                                                </td>
+                                                <td class="col-md-3 text-right">{{ currency_format(item.price) }}</td>
+                                            </tr>
+                                        {% endfor %}
                                         <tr>
-                                            <td class="col-md-9">
-                                                <a title="Download" class="text-success" href="{{ url_for('static', filename='templates_data/' + item.item_id|string + '/download_' + item.item_id|string + '.zip') }}">
-                                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                                                </a>
-                                                <a href="{{ url_for('items.single_template', item_id=item.item_id) }}">{{ item.name }}</a>
-                                            </td>
-                                            <td class="col-md-3 text-right">{{ currency_format(item.price) }}</td>
+                                            <td class="col-md-9"><strong>Total</strong></td>
+                                            <td class="col-md-3 text-right"><strong>{{ currency_format(order['total']) }}</strong></td>
                                         </tr>
-                                    {% endfor %}
-                                    <tr>
-                                        <td class="col-md-9"><strong>Total</strong></td>
-                                        <td class="col-md-3 text-right"><strong>{{ currency_format(order['total']) }}</strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
 
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        No orders
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

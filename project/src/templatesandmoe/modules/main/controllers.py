@@ -47,9 +47,10 @@ def account():
 def account_templates():
     user_id = session.get('user_id')
     if user_id:
-        items = reports.item_sales_report_for_user(user_id)
+        templates = reports.item_sales_report_for_user(user_id)
+
         return render_template('main/account_items.html',
-                               items=items)
+                               items=templates)
     else:
         return redirect('/login')
 
@@ -57,10 +58,10 @@ def account_templates():
 @mainModule.route('/account/orders')
 def account_orders():
     if session.get('user_id'):
-        account_orders = orders.get_orders_by_user(session.get('user_id'))
+        templates = orders.get_orders_by_user(session.get('user_id'))
 
         return render_template('main/account_orders.html',
-                               orders=account_orders)
+                               orders=templates)
     else:
         return redirect('/login')
 

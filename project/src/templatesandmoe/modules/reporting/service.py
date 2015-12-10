@@ -76,13 +76,26 @@ class ReportingService:
 
     def item_sales_report_for_user(self, user_id):
             report = self.database.execute(text(
-                'SELECT I.item_id, I.name, U.username, COUNT(TI.item_id) as sales, SUM(I.price) as revenue '
+                'SELECT I.item_id, I.name, U.username, '
+                    '('
+                        'SELECT COUNT(TI2.item_id) '
+                        'FROM Transaction_Items TI2 '
+                        'JOIN Items I2 ON I2.item_id = TI2.item_id '
+                        'WHERE I2.item_id = I.item_id '
+                    ') as sales, '
+                    '('
+                        'SELECT SUM(I2.price) '
+                        'FROM Transaction_Items TI2 '
+                        'JOIN Items I2 ON I2.item_id = TI2.item_id '
+                        'WHERE I2.item_id = I.item_id '
+                    ') as revenue '
                 'FROM Templates T '
                 'JOIN Items I ON I.item_id = T.item_id '
                 'JOIN Users U ON U.user_id = I.user_id '
-                'JOIN Transaction_Items TI ON TI.item_id = I.item_id '
-                'JOIN Transactions TR ON TI.transaction_id = TR.transaction_id '
-                'WHERE I.user_id = :user_id'
+                'LEFT JOIN Transaction_Items TI ON TI.item_id = I.item_id '
+                'LEFT JOIN Transactions TR ON TI.transaction_id = TR.transaction_id '
+                'WHERE I.user_id = :user_id '
+                'GROUP BY I.item_id'
             ), {'user_id': user_id}).fetchall()
 
             return report
