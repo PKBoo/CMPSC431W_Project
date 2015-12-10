@@ -76,7 +76,7 @@ class AuctionsService:
             'JOIN Items I ON I.item_id = S.item_id '
             'WHERE B.user_id = :user_id AND S.ended = 0 '
             'GROUP BY B.service_id'
-        ), {'user_id':user_id})
+        ), {'user_id':user_id}).fetchall()
 
         return services
 

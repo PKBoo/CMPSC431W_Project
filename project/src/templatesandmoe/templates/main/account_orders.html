@@ -1,0 +1,58 @@
+{% extends "layout/main.html" %}
+{% block title %}- Account{% endblock %}
+{% block body %}
+    <div class="main container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h3>Your Orders</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="{{ url_for('main.account') }}">Account</a></li>
+                    <li class="active"><a href="{{ url_for('main.account_orders') }}">Orders</a></li>
+                    <li><a href="{{ url_for('main.account_templates') }}">Templates</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                {% for transaction_id, order in orders.items() %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>Order Number: </strong>
+                            <a href="{{ url_for('main.order_summary', transaction_id=hash_public_id(order['transaction_id'])) }}">
+                                {{ hash_public_id(order['transaction_id']) }}
+                            </a>
+                        </div>
+                        <div class="panel panel-body">
+                            <table class="table">
+                                <tbody>
+                                    {%  for item in order['items'] %}
+                                        <tr>
+                                            <td class="col-md-9">
+                                                <a title="Download" class="text-success" href="{{ url_for('static', filename='templates_data/' + item.item_id|string + '/download_' + item.item_id|string + '.zip') }}">
+                                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                                </a>
+                                                <a href="{{ url_for('items.single_template', item_id=item.item_id) }}">{{ item.name }}</a>
+                                            </td>
+                                            <td class="col-md-3 text-right">{{ currency_format(item.price) }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td class="col-md-9"><strong>Total</strong></td>
+                                        <td class="col-md-3 text-right"><strong>{{ currency_format(order['total']) }}</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

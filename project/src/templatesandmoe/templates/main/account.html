@@ -2,7 +2,7 @@
 
 {% block title %}- Account{% endblock %}
 {% block body %}
-    <div class="container">
+    <div class="main container">
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header">
@@ -14,8 +14,9 @@
         <div class="row">
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">Orders</a></li>
-                    <li><a href="#">Items</a></li>
+                    <li class="active"><a href="{{ url_for('main.account') }}">Account</a></li>
+                    <li><a href="{{ url_for('main.account_orders') }}">Orders</a></li>
+                    <li><a href="{{ url_for('main.account_templates') }}">Templates</a></li>
                 </ul>
             </div>
 
@@ -25,7 +26,8 @@
                         <h4>Won Auctions</h4>
                     </div>
                     <div class="panel-body">
-                        <table class="table">
+                        {% if won_bids|length > 0 %}
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <td><strong>Service</strong></td>
@@ -37,12 +39,17 @@
                                 {% for bid in won_bids %}
                                     <tr>
                                         <td><a href="{{ url_for('items.single_service', item_id=bid.item_id) }}">{{ bid.name }}</a></td>
-                                        <td>{{ bid.username }}</td>
+                                        <td>
+                                            <a href="{{ url_for('main.user_profile', username=bid.username) }}">{{ bid.username }}</a>
+                                        </td>
                                         <td>{{ currency_format(bid.amount) }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% else %}
+                            No won bids
+                        {% endif %}
                     </div>
                 </div>
 
@@ -51,6 +58,7 @@
                         <h4>Bidding</h4>
                     </div>
                     <div class="panel-body">
+                        {% if users_bid_services|length > 0 %}
                         <table class="table">
                             <thead>
                                 <tr>
@@ -69,6 +77,9 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% else %}
+                            No current bids
+                        {% endif %}
                     </div>
                 </div>
             </div>

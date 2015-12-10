@@ -11,6 +11,7 @@ from templatesandmoe.modules.categories.service import CategoriesService
 from templatesandmoe.modules.auctions.service import AuctionsService
 from templatesandmoe.modules.tags.service import TagsService
 from templatesandmoe.modules.users.service import UsersService
+from templatesandmoe.modules.reporting.service import ReportingService
 
 mainModule = Blueprint('main', __name__)
 items = ItemsService(database=db_session)
@@ -19,6 +20,8 @@ categories = CategoriesService(database=db_session)
 auctions = AuctionsService(database=db_session)
 tags = TagsService(database=db_session)
 users = UsersService(database=db_session)
+reports = ReportingService(database=db_session)
+
 
 @mainModule.route('/', methods=['GET'])
 def home():
@@ -40,7 +43,29 @@ def account():
         return redirect('/login')
 
 
-@mainModule.route('/orders/<string:transaction_id>', methods=['GET'])
+@mainModule.route('/account/items')
+def account_templates():
+    user_id = session.get('user_id')
+    if user_id:
+        items = reports.item_sales_report_for_user(user_id)
+        return render_template('main/account_items.html',
+                               items=items)
+    else:
+        return redirect('/login')
+
+
+@mainModule.route('/account/orders')
+def account_orders():
+    if session.get('user_id'):
+        account_orders = orders.get_orders_by_user(session.get('user_id'))
+
+        return render_template('main/account_orders.html',
+                               orders=account_orders)
+    else:
+        return redirect('/login')
+
+
+@mainModule.route('/orders/<string:transaction_id>')
 def order_summary(transaction_id):
     decoded_id = hashids.decode(transaction_id)
     transaction = orders.get_order_by_id(decoded_id)

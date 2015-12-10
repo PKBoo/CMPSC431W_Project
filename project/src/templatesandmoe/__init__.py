@@ -83,8 +83,13 @@ def template_preview_url(item_id):
     else:
         return url_for('static', filename='images/default_preview.png')
 
+
+def hash_public_id(number):
+    return hashids.encode(number)
+
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['currency_format'] = currency_format
 app.jinja_env.globals['template_preview_url'] = template_preview_url
 app.jinja_env.globals['time_format'] = time_format
 app.jinja_env.globals['format_rating'] = format_rating
+app.jinja_env.globals['hash_public_id'] = hash_public_id

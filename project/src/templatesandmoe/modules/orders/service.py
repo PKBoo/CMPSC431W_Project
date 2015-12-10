@@ -46,3 +46,32 @@ class OrdersService:
         except:
             self.database.rollback()
             raise
+
+    def get_orders_by_user(self, user_id):
+        orders = self.database.execute(text(
+            'SELECT T.transaction_id, T.created_at, I.item_id, I.name, I.price, '
+				'('
+					'SELECT SUM(I2.price) as total FROM Transactions T2 '
+					'JOIN Transaction_Items TI2 ON TI2.transaction_id = T2.transaction_id '
+                    'JOIN Items I2 ON I2.item_id = TI2.item_id '
+                    'WHERE T2.transaction_id = T.transaction_id '
+                ') as total '
+			'FROM Transactions T '
+            'JOIN Transaction_Items TI ON TI.transaction_id = T.transaction_id '
+            'JOIN Items I ON I.item_id = TI.item_id '
+            'WHERE T.user_id = :user_id '
+        ), {'user_id': user_id}).fetchall()
+
+        return_orders = {}
+        for order in orders:
+            if order.transaction_id in return_orders:
+                return_orders[order.transaction_id]['items'].append(order)
+            else:
+                return_orders[order.transaction_id] = {
+                    'transaction_id': order.transaction_id,
+                    'created_at': order.created_at,
+                    'total': order.total,
+                    'items': [order]
+                }
+
+        return return_orders

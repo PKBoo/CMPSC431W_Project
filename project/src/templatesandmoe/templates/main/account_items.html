@@ -1,0 +1,44 @@
+{% extends "layout/main.html" %}
+{% block title %}- Account{% endblock %}
+{% block body %}
+    <div class="main container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h3>Your Templates</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="{{ url_for('main.account') }}">Account</a></li>
+                    <li><a href="{{ url_for('main.account_orders') }}">Orders</a></li>
+                    <li class="active"><a href="{{ url_for('main.account_templates') }}">Templates</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><strong># of Sales</strong></td>
+                            <td><strong>Total Revenue</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td><a href="{{ url_for('items.single_template', item_id=item.item_id) }}">{{ item.name }}</a></td>
+                                <td>{{ item.sales }}</td>
+                                <td>{{ item.revenue }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
