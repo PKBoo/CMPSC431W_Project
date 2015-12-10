@@ -35,10 +35,12 @@ def account():
         user_id = session.get('user_id')
         users_bid_services = auctions.get_services_user_bid_on(user_id)
         won_bids = auctions.get_won_bids_by_user(user_id)
+        users_services = items.get_services_by_user_id(user_id)
 
         return render_template("main/account.html",
                                users_bid_services=users_bid_services,
-                               won_bids=won_bids)
+                               won_bids=won_bids,
+                               users_services=users_services)
     else:
         return redirect('/login')
 

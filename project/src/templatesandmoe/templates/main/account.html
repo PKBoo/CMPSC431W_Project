@@ -82,8 +82,65 @@
                         {% endif %}
                     </div>
                 </div>
-            </div>
 
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Your Services</h4>
+                    </div>
+                    <div class="panel panel-body">
+                        {% if users_services|length > 0 %}
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <td><strong>Service</strong></td>
+                                <td><strong># of bids</strong></td>
+                                <td><strong>Highest Bid</strong></td>
+                                <td><strong>End Date</strong></td>
+                                <td><strong>Winner</strong></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in users_services %}
+                                    <tr {% if service.winner is not none and service.ended == 1 %} class="success" {% endif %}>
+                                        <td>
+                                            <a href="{{ url_for('items.single_service', item_id=service.item_id) }}">
+                                                {{ service.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ service.bids }}
+                                        </td>
+                                        <td>
+                                            {% if service.highest_bid is not none %}
+                                                {{ currency_format(service.highest_bid) }}
+                                            {% else %}
+                                                No bids
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ time_format(service.end_date) }}</td>
+                                        <td>
+                                            {% if service.winner is not none and service.ended == 1 %}
+                                                <a href="{{ url_for('main.user_profile', username=service.winner) }}">{{ service.winner }}</a>
+                                            {% else %}
+                                                No winner
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                        {% else %}
+                            <div class="alert alert-info">
+                                No services
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -55,18 +55,22 @@
                                 <thead>
                                 <tr>
                                     <th>Service Name</th>
-                                    <th>Created By</th>
-                                    <th>Start date</th>
                                     <th>End date</th>
+                                    <th>Highest Bid</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for service in services %}
                                     <tr>
                                         <td><a href="{{ url_for('items.single_service', item_id=service.item_id) }}">{{ service.name }}</a></td>
-                                        <td>{{ service.username }}</td>
-                                        <td>{{ service.created_at }}</td>
-                                        <td>{{ service.end_date }}</td>
+                                        <td>{{ time_format(service.end_date) }}</td>
+                                        <td>
+                                            {% if service.highest_bid is not none %}
+                                                {{ currency_format(service.highest_bid) }}
+                                            {% else %}
+                                                No bids
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

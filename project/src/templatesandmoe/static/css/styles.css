@@ -202,3 +202,7 @@ margin-bottom: 10px;
 .thumbnail > img {
     height: 158px;
 }
+
+tr.success a {
+    color: #FFF;
+}

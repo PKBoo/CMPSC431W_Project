@@ -180,11 +180,17 @@ class ItemsService:
 
     def get_services_by_user_id(self, user_id):
         services = self.database.execute(text(
-            'SELECT S.service_id, I.item_id, S.end_date, I.name, I.price, I.created_at '
+            'SELECT S.service_id, I.item_id, S.end_date, S.ended, I.name, I.price, I.created_at, '
+            '(SELECT MAX(B.amount) FROM Bids B WHERE B.service_id = S.service_id) AS highest_bid, '
+            '(SELECT U.username FROM Bids B '
+                'JOIN Users U ON U.user_id = B.user_id '
+                'WHERE B.service_id = S.service_id '
+                'ORDER BY B.amount DESC LIMIT 1) AS winner,'
+            '(SELECT COUNT(*) FROM Bids B Where B.service_id = S.service_id) AS bids '
             'FROM Services S '
             'JOIN Items I ON I.item_id = S.item_id '
             'WHERE I.user_id = :user_id'
-        ), {'user_id': user_id})
+        ), {'user_id': user_id}).fetchall()
 
         return services
 
