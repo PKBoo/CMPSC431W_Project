@@ -157,7 +157,7 @@ def place_bid(item_id):
                         auctions.place_bid(service.service_id, user_id, amount)
                         flash('Successfully placed bid', category='bid_placed')
                     else:
-                        flash('Bid must be greater than $2.00.', category='bid')
+                        flash('Bid must be $2.00 greater than the highest bid.', category='bid')
                     return redirect(request.referrer)
                 else:
                     flash('Bid amount must be greater than highest bid.', category='bid')
