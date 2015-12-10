@@ -43,7 +43,7 @@ def account():
         return redirect('/login')
 
 
-@mainModule.route('/account/items')
+@mainModule.route('/account/templates')
 def account_templates():
     user_id = session.get('user_id')
     if user_id:
