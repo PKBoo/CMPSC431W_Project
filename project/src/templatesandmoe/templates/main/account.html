@@ -25,7 +25,24 @@
                         <h4>Won Auctions</h4>
                     </div>
                     <div class="panel-body">
-                        fasdf
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td><strong>Service</strong></td>
+                                    <td><strong>Seller</strong></td>
+                                    <td><strong>Amount</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bid in won_bids %}
+                                    <tr>
+                                        <td><a href="{{ url_for('items.single_service', item_id=bid.item_id) }}">{{ bid.name }}</a></td>
+                                        <td>{{ bid.username }}</td>
+                                        <td>{{ currency_format(bid.amount) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 

@@ -112,9 +112,13 @@
                         <h4>Tags</h4>
                     </div>
                     <div class="panel-body">
-                        {% for tag in item_tags %}
-                            <span class="label label-info">{{ tag.name }}</span>
-                        {% endfor %}
+                        {% if item_tags %}
+                            {% for tag in item_tags %}
+                                <span class="label label-info">{{ tag.name }}</span>
+                            {% endfor %}
+                        {% else %}
+                            No tags
+                        {% endif %}
                     </div>
                 </div>
             </div>

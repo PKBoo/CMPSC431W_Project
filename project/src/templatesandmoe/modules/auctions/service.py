@@ -79,3 +79,14 @@ class AuctionsService:
         ), {'user_id':user_id})
 
         return services
+
+    def get_won_bids_by_user(self, user_id):
+        bids = self.database.execute(text(
+            'SELECT I.item_id, I.name, U.username, B.service_id, B.amount FROM Bids B '
+            'JOIN Services S ON S.service_id = B.service_id '
+            'JOIN Items I ON I.item_id = S.item_id '
+            'JOIN Users U ON I.user_id = U.user_id '
+            'WHERE B.winning = 1 AND B.user_id = :user_id'
+        ), {'user_id': user_id}).fetchall()
+
+        return bids
