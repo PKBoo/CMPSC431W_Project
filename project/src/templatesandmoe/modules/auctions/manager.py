@@ -11,10 +11,9 @@ class AuctionsManager:
     def __init__(self, app, database):
 
         db = SQLAlchemy(app)
-        metadata = MetaData()
         db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=db.engine))
+                                                 autoflush=False,
+                                                 bind=db.engine))
         self.database = db_session
         self.items = ItemsService(database=db_session)
         self.auctions = AuctionsService(database=db_session)
@@ -38,6 +37,7 @@ class AuctionsManager:
                 print('Found winnning bid for ' + str(service.service_id))
                 print(service.winning_bid_id)
                 self.auctions.mark_bid_as_won(service.winning_bid_id)
+        self.database.close()
 
 
     def start(self):
