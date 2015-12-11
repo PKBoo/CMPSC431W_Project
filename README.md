@@ -45,7 +45,8 @@ Changes can be made through the host machine and will automatically be synced to
 5. `exit`
 6. `cd /var/www/src/sql`
 7. `mysql -u root -p templatesandmoe < database1_2015-10-10.sql`
-8. `mysql -u root -p templatesandmoe < testdata.sql`
+8. `mysql -u root -p templatesandmoe < new_fields.sql`
+9. `mysql -u root -p templatesandmoe < testdata.sql`
 
 ### Useful commands
 

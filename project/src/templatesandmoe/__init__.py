@@ -23,6 +23,7 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 
 hashids = Hashids(salt='NTebZ10PhLdDM8EG00c7u14YGQW8PA0l', min_length=8)
 
+# Start auction manager to watch for ending auctions
 auctions_manager = AuctionsManager(app=app, database=db_session)
 
 # Import modules
