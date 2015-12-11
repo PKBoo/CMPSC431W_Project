@@ -20,7 +20,6 @@
             </div>
 
             <div class="col-md-9">
-                {% if order|length > 0 %}
                     {% for transaction_id, order in orders.items() %}
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -53,11 +52,6 @@
                         </div>
 
                     {% endfor %}
-                {% else %}
-                    <div class="alert alert-info">
-                        No orders
-                    </div>
-                {% endif %}
             </div>
         </div>
     </div>
